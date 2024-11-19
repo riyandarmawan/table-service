@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Pelanggan extends Model
 {
@@ -13,4 +14,8 @@ class Pelanggan extends Model
     protected $primaryKey = 'id_pelanggan';
 
     protected $guarded = [];
+
+    public function pesanans(): HasMany {
+        return $this->hasMany(Pesanan::class);
+    }
 }

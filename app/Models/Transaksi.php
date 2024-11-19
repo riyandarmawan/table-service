@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Transaksi extends Model
 {
@@ -13,4 +14,8 @@ class Transaksi extends Model
     protected $primaryKey = 'id_transaksi';
 
     protected $guarded = [];
+
+    public function pesanan(): BelongsTo {
+        return $this->belongsTo(Pesanan::class);
+    }
 }
