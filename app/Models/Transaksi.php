@@ -9,4 +9,8 @@ class Transaksi extends Model
 {
     /** @use HasFactory<\Database\Factories\TransaksiFactory> */
     use HasFactory;
+
+    protected $primaryKey = 'id_transaksi';
+
+    protected $guarded = [];
 }

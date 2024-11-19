@@ -9,4 +9,8 @@ class Pelanggan extends Model
 {
     /** @use HasFactory<\Database\Factories\PelangganFactory> */
     use HasFactory;
+
+    protected $primaryKey = 'id_pelanggan';
+
+    protected $guarded = [];
 }

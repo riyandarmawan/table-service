@@ -9,4 +9,8 @@ class Pesanan extends Model
 {
     /** @use HasFactory<\Database\Factories\PesananFactory> */
     use HasFactory;
+
+    protected $primaryKey = 'id_pesanan';
+
+    protected $guarded = [];
 }
