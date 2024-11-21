@@ -7,6 +7,8 @@
         "start": "concurrently \"php artisan serve\" \"pnpm run dev\""
     },
     "devDependencies": {
+        "@egoist/tailwindcss-icons": "^1.8.1",
+        "@iconify-json/mdi": "^1.2.1",
         "autoprefixer": "^10.4.20",
         "axios": "^1.7.4",
         "concurrently": "^9.0.1",

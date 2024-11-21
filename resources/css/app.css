@@ -2,10 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+[x-cloak] { display: none !important; }
+
 .input-valid {
     @apply border-gray-200 focus:ring-blue-500
 }
 
 .input-invalid {
     @apply border-red-200 focus:ring-red-500
+}
+
+.sidebar-active {
+    @apply bg-blue-600
 }
