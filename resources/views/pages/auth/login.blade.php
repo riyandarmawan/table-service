@@ -28,10 +28,4 @@
             </form>
         </div>
     </div>
-
-    <script>
-        if({{ Session::get('message') ?? false }}) {
-            window.successAlert({{ Session::get('message') }});
-        }
-    </script>
 </x-base-layout>
