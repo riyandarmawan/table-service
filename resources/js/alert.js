@@ -1,6 +1,6 @@
 import Swal from 'sweetalert2'
 
-function successAlert(message) {
+window.successAlert = (message) => {
     const Toast = Swal.mixin({
         toast: true,
         position: "top-end",
@@ -12,11 +12,8 @@ function successAlert(message) {
             toast.onmouseleave = Swal.resumeTimer;
         }
     });
-
     Toast.fire({
         icon: "success",
         title: `${message}`
     });
 }
-
-window.successAlert = successAlert

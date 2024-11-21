@@ -20,24 +20,25 @@ class UserController extends Controller
     {
         $credentials = $request->validate([
             'username' => 'required|exists:App\Models\User,username',
-            'password' => 'required'
+            'password' => 'required',
         ], [
             // username
-            'username.required' => 'Username wajib diisi',
+            'username.required' => 'Username harus diisi!',
             'username.exists' => 'Username tidak ditemukan!',
 
             // password
-            'password.required' => 'Password wajib diisi',
+            'password.required' => 'Password harus diisi!',
         ]);
 
         if(Auth::attempt($credentials)) {
-            return redirect('/');
+            return redirect('/')->with('message', 'Anda berhasil login');
         }
 
         return back()->withErrors(['password' => 'Password yang anda masukkan salah!'])->onlyInput('username');
     }
 
-    public function logout() {
+    public function logout()
+    {
         Auth::logout();
 
         return redirect('/auth/login')->with('message', 'Anda berhasil logout');
