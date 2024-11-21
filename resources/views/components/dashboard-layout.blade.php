@@ -1,5 +1,5 @@
 <x-base-layout :$title>
-    <div x-data="{openSidebar: false}">
+    <div x-data="{openSidebar: false, showModalLogout: false}">
         <header class="fixed left-0 right-0 top-0 flex h-16 justify-between border border-blue-600 bg-blue-500 px-6 z-10">
             <div class="flex items-center gap-4">
                 <span @click="openSidebar = !openSidebar" class="i-mdi-hamburger-menu mt-1 cursor-pointer text-4xl text-white"></span>
@@ -62,7 +62,7 @@
                         </a>
                     </li>
                     <li>
-                        <button type="button"
+                        <button @click="showModalLogout = !showModalLogout" type="button"
                             class="flex w-full items-center gap-2 rounded px-2 py-1 text-2xl font-semibold hover:bg-blue-600">
                             <span class="i-mdi-logout mt-1 text-3xl"></span>
                             Keluar
@@ -71,8 +71,22 @@
                 </ul>
             </aside>
             <main :class="openSidebar ? 'left-72' : 'left-[3.8rem]'" class="absolute right-0 top-16 bottom-0">
-                {{ $slot }}
+                {{-- {{ $slot }} --}}
             </main>
+        </div>
+
+        <div x-cloak x-show="showModalLogout" class="bg-gray-500 bg-opacity-50 flex justify-center items-center absolute inset-0 z-20">
+            <div @click.outside="showModalLogout = false" class="bg-gray-100 border border-gray-200 shadow-md rounded-md p-4">
+                <h1 class="min-w-96 text-3xl font-bold mb-4">Peringatan</h1>
+                <p class="mb-4">Apakah anda yakin ingin keluar dari akun ini?</p>
+                <div class="flex justify-end gap-2">
+                    <form action="/auth/logout" method="POST">
+                        @csrf
+                        <button class="py-2 px-4 bg-blue-500 text-white shadow rounded">Ya, saya ingin keluar</button>
+                    </form>
+                    <button @click="showModalLogout = false" class="py-2 px-4 bg-red-500 text-white shadow rounded">Tidak</button>
+                </div>
+            </div>
         </div>
     </div>
 
