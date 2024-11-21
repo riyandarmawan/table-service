@@ -31,7 +31,7 @@ class UserController extends Controller
         ]);
 
         if(Auth::attempt($credentials)) {
-            return redirect('/')->with('success', 'Anda berhasil login sebagai @' . $credentials['username']);
+            return redirect('/')->with('success', 'Anda berhasil masuk');
         }
 
         return back()->withErrors(['password' => 'Password yang anda masukkan salah!'])->onlyInput('username');
@@ -41,6 +41,6 @@ class UserController extends Controller
     {
         Auth::logout();
 
-        return redirect('/auth/login')->with('success', 'Anda berhasil logout');
+        return redirect('/auth/login')->with('success', 'Anda berhasil keluar');
     }
 }

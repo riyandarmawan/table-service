@@ -1,0 +1,1 @@
+<x-dashboard-layout :$title></x-dashboard-layout>
