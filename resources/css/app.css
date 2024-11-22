@@ -15,3 +15,15 @@
 .sidebar-active {
     @apply bg-blue-600
 }
+
+table, th, td {
+    @apply  border rounded py-2 px-4 text-center
+}
+
+table {
+    @apply border-gray-400 
+}
+
+th, td {
+    @apply border-gray-300 
+}

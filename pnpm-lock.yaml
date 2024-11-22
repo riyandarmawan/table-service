@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@alpinejs/persist':
+        specifier: ^3.14.3
+        version: 3.14.3
       alpinejs:
         specifier: ^3.14.3
         version: 3.14.3
@@ -48,6 +51,9 @@ packages:
   '@alloc/quick-lru@5.2.0':
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
+
+  '@alpinejs/persist@3.14.3':
+    resolution: {integrity: sha512-atWMKAHdDBKxHoiAEVAx9Ft+d1m9BzsepTkPZwrJmLNYPoyXnpUp1NrPLiSLB6FzUFRPoIV0tMF2kgnRwzp+vA==}
 
   '@antfu/install-pkg@0.4.1':
     resolution: {integrity: sha512-T7yB5QNG29afhWVkVq7XeIMBa5U/vs9mX69YqayXypPRmYzUmzwnYltplHmPtZ4HPCn+sQKeXW8I47wCbuBOjw==}
@@ -964,6 +970,8 @@ packages:
 snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
+
+  '@alpinejs/persist@3.14.3': {}
 
   '@antfu/install-pkg@0.4.1':
     dependencies:
