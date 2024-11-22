@@ -13,6 +13,10 @@ class Menu extends Model
 
     protected $primaryKey = 'id_menu';
 
+    protected $keyType = 'string';
+
+    public $incrementing = false;
+
     protected $guarded = [];
 
     public function pesanans(): HasMany {
