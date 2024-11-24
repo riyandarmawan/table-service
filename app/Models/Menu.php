@@ -19,6 +19,19 @@ class Menu extends Model
 
     protected $guarded = [];
 
+    public static function generateIdMenu() {
+        $lastMenu = self::orderBy('id_menu', 'desc')->first(); // Get the latest record
+        if ($lastMenu) {
+            $lastId = $lastMenu->id_menu;
+            $number = (int) substr($lastId, 3); // Extract the numeric part
+            $nextNumber = str_pad($number + 1, 3, '0', STR_PAD_LEFT); // Increment and pad
+        } else {
+            $nextNumber = '001'; // Default if no records exist
+        }
+
+        return "MN-{$nextNumber}";
+    }
+
     public function pesanans(): HasMany {
         return $this->hasMany(Pesanan::class);
     }

@@ -1,5 +1,5 @@
 window.formatToIdr = (value) => {
-    if(!value) return '';
+    if (!value) return '';
 
     value = String(value).replace(/[^\d]/g, '');
 

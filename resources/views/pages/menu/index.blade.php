@@ -10,7 +10,7 @@
                     <div class="mb-4">
                         <label for="id_menu" class="min-w-28 mr-4 inline-block font-medium">Kode Menu</label>
                         <input type="text" name="id_menu" id="id_menu"
-                            value="{{ $errors->has('id_menu') ? '' : old('id_menu') }}"
+                            value="{{ $errors->has('id_menu') ? $idMenu : old('id_menu', $idMenu) }}" readonly
                             {{ $errors->has('id_menu') ? 'focused' : '' }} required
                             class="{{ $errors->has('id_menu') ? 'input-invalid' : 'input-valid' }} w-full rounded border bg-gray-100 px-4 py-2 shadow outline-none focus:ring">
                         @error('id_menu')
@@ -29,8 +29,9 @@
                     </div>
                     <div x-data="{ harga: 'Rp 0' }" class="mb-4">
                         <label for="harga" class="min-w-28 mr-4 inline-block font-medium">Harga Menu</label>
-                        <input type="text" name="harga" id="harga" x-model="harga" @input="harga = window.formatToIdr(harga)"
-                            :value="harga" value="{{ $errors->has('harga') ? '' : old('harga') }}"
+                        <input type="text" name="harga" id="harga" x-model="harga"
+                            @input="harga = window.formatToIdr(harga)" :value="harga"
+                            value="{{ $errors->has('harga') ? '' : old('harga') }}"
                             {{ $errors->has('harga') ? 'focused' : '' }} required
                             class="{{ $errors->has('harga') ? 'input-invalid' : 'input-valid' }} w-full rounded border bg-gray-100 px-4 py-2 shadow outline-none focus:ring">
                         @error('harga')

@@ -10,9 +10,12 @@ class MenuController extends Controller
     public function index() {
         $menu = new Menu();
 
+        $idMenu = $menu->generateIdMenu();
+
         $data = [
             'title' => 'Daftar Menu',
-            'menus' => $menu->all()
+            'menus' => $menu->all(),
+            'idMenu' => $idMenu
         ];
 
         return view('pages.menu.index', $data);
@@ -27,7 +30,12 @@ class MenuController extends Controller
 
         $menu = new Menu();
 
-        if($menu->create($request->all())) {
+        $menu->id_menu = $request->input('id_menu');
+        $menu->nama_menu = $request->input('nama_menu');
+        $hargaFormatted = $request->input('harga');
+        $menu->harga = (int) preg_replace('/[^\d]/', '', $hargaFormatted);
+
+        if($menu->save()) {
             return redirect('/menu')->with('success', 'Menu baru berhasil ditambahkan!');
         }
 
