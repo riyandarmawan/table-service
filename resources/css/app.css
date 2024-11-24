@@ -17,7 +17,7 @@
 }
 
 table, th, td {
-    @apply  border rounded py-2 px-4 text-center
+    @apply  border rounded py-2 px-4 text-center h-fit
 }
 
 table {

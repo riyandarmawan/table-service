@@ -7,6 +7,7 @@
     <title>{{ $title ?? 'Table Service' }}</title>
     @vite('resources/css/app.css')
     @vite('resources/js/alert.js')
+    @vite('resources/js/utils.js')
 </head>
 
 <body>
