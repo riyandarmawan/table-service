@@ -27,17 +27,14 @@ class PelangganController extends Controller
         $request->validate([
             'id_pelanggan' => 'required',
             'nama_pelanggan' => 'required',
-            'harga' => 'required',
+            'jenis_kelamin' => 'required',
+            'no_hp' => 'required',
+            'alamat' => 'required',
         ]);
 
         $pelanggan = new Pelanggan();
 
-        $pelanggan->id_pelanggan = $request->input('id_pelanggan');
-        $pelanggan->nama_pelanggan = $request->input('nama_pelanggan');
-        $hargaFormatted = $request->input('harga');
-        $pelanggan->harga = (int) preg_replace('/[^\d]/', '', $hargaFormatted);
-
-        if ($pelanggan->save()) {
+        if ($pelanggan->create($request->all())) {
             return redirect('/pelanggan')->with('success', 'Pelanggan baru berhasil ditambahkan!');
         }
 
@@ -69,15 +66,18 @@ class PelangganController extends Controller
         $request->validate([
             'id_pelanggan' => 'required',
             'nama_pelanggan' => 'required',
-            'harga' => 'required',
+            'jenis_kelamin' => 'required',
+            'no_hp' => 'required',
+            'alamat' => 'required',
         ]);
 
         $pelanggan = Pelanggan::find($id_pelanggan);
 
         $pelanggan->id_pelanggan = $request->input('id_pelanggan');
         $pelanggan->nama_pelanggan = $request->input('nama_pelanggan');
-        $hargaFormatted = $request->input('harga');
-        $pelanggan->harga = (int) preg_replace('/[^\d]/', '', $hargaFormatted);
+        $pelanggan->jenis_kelamin = $request->input('jenis_kelamin');
+        $pelanggan->no_hp = $request->input('no_hp');
+        $pelanggan->alamat = $request->input('alamat');
 
         if ($pelanggan->save()) {
             return redirect('/pelanggan')->with('success', 'Pelanggan berhasil diubah!');

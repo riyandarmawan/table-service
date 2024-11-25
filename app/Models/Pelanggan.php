@@ -14,6 +14,10 @@ class Pelanggan extends Model
 
     protected $primaryKey = 'id_pelanggan';
 
+    protected $keyType = 'string';
+
+    public $incrementing = false;
+
     protected $guarded = [];
 
     public static function generateIdPelanggan()

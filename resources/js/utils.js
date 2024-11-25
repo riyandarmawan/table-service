@@ -10,3 +10,12 @@ window.formatToIdr = (value) => {
         minimumFractionDigits: 0,
     }).format(value);
 }
+
+window.gender = (value) => {
+    const gender = {
+        l: 'Laki-laki',
+        p: 'Perempuan'
+    }
+
+    return gender[value] || 'Tidak diketahui';
+}
