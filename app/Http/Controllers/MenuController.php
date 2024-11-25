@@ -10,11 +10,13 @@ class MenuController extends Controller
     public function index() {
         $menu = new Menu();
 
+        $menus = $menu->filter(request(['search']))->paginate(10);
+
         $idMenu = $menu->generateIdMenu();
 
         $data = [
             'title' => 'Daftar Menu',
-            'menus' => $menu->all(),
+            'menus' => $menus,
             'idMenu' => $idMenu
         ];
 
@@ -45,7 +47,7 @@ class MenuController extends Controller
     public function choice($id_menu) {
         $menu = new Menu();
 
-        $menus = $menu->all();
+        $menus = $menu->filter(request(['search']))->paginate(10);
         
         $menu = $menu->find($id_menu);
 

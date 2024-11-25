@@ -3,9 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pelanggan extends Model
 {
@@ -34,7 +35,17 @@ class Pelanggan extends Model
         return "PL-{$nextNumber}";
     }
 
-    public function pesanans(): HasMany {
+    public function pesanans(): HasMany
+    {
         return $this->hasMany(Pesanan::class);
+    }
+
+    public function scopeFilter(Builder $query, array $filters): void
+    {
+        $query->when(
+            $filters['search'] ?? false,
+            fn($query, $search) =>
+            $query->where('id_pelanggan', 'like', "%$search%")->orWhere('nama_pelanggan', 'like', "%$search%")->orWhere('jenis_kelamin', 'like', "%$search%")->orWhere('no_hp', 'like', "%$search%")->orWhere('alamat', 'like', "%$search%")
+        );
     }
 }

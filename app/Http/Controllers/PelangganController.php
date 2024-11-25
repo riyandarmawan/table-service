@@ -11,11 +11,13 @@ class PelangganController extends Controller
     {
         $pelanggan = new Pelanggan();
 
+        $pelanggans = $pelanggan->filter(request(['search']))->paginate(10);
+
         $idPelanggan = $pelanggan->generateIdPelanggan();
 
         $data = [
             'title' => 'Daftar Pelanggan',
-            'pelanggans' => $pelanggan->all(),
+            'pelanggans' => $pelanggans,
             'idPelanggan' => $idPelanggan
         ];
 
@@ -45,7 +47,7 @@ class PelangganController extends Controller
     {
         $pelanggan = new Pelanggan();
 
-        $pelanggans = $pelanggan->all();
+        $pelanggans = $pelanggan->filter(request(['search']))->paginate(10);
 
         $pelanggan = $pelanggan->find($id_pelanggan);
 

@@ -1,5 +1,5 @@
 <x-dashboard-layout :$title>
-    <div x-data="{showModalHapus: false}" class="p-4">
+    <div x-data="{ showModalHapus: false }" class="p-4">
         <h1 class="mb-6 text-3xl font-bold">{{ $title }}</h1>
 
         <div class="flex flex-nowrap gap-4">
@@ -58,7 +58,7 @@
             </div>
 
             <div class="w-full overflow-y-auto" style="height: calc(100vh - 180px)">
-                <table class="w-full table-auto border-collapse">
+                <table class="w-full table-auto border-collapse mb-4">
                     <thead>
                         <th>Kode Menu</th>
                         <th>Nama Menu</th>
@@ -79,12 +79,14 @@
                         @endforeach
                     </tbody>
                 </table>
+                {{ $menus->links() }}
             </div>
         </div>
 
         @if (!Request::is('menu'))
             <x-modal modalName="Hapus" bodyText="Peringatan apakah anda yakin ingin menghapus menu ini?"
-                href="/menu/delete/{{ $idMenu ?? '' }}" confirmText="Ya, saya ingin menghapusnya" cancelText="Tidak"></x-modal>
+                href="/menu/delete/{{ $idMenu ?? '' }}" confirmText="Ya, saya ingin menghapusnya"
+                cancelText="Tidak"></x-modal>
         @endif
     </div>
 </x-dashboard-layout>

@@ -8,8 +8,8 @@
                 <h1 class="text-3xl font-bold text-white">Table Service</h1>
             </div>
             <div class="flex items-center">
-                <form action="" method="POST">
-                    <input type="text" name="search" id="search" placeholder="Cari data di sini"
+                <form action="" method="GET">
+                    <input type="text" name="search" id="search" placeholder="Cari data di sini" value="{{ request('search') ?? '' }}"
                         class="rounded-full border border-gray-200 px-4 py-2 outline-none focus:ring focus:ring-blue-700">
                 </form>
             </div>

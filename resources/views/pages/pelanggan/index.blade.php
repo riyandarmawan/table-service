@@ -85,7 +85,7 @@
             </div>
 
             <div class="w-full overflow-y-auto" style="height: calc(100vh - 180px)">
-                <table class="w-full table-auto border-collapse">
+                <table class="w-full table-auto border-collapse mb-4">
                     <thead>
                         <th>Kode Pelanggan</th>
                         <th>Nama Pelanggan</th>
@@ -110,6 +110,7 @@
                         @endforeach
                     </tbody>
                 </table>
+                {{ $pelanggans->links() }}
             </div>
         </div>
 
