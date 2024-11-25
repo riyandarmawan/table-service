@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('no_hp', 13);
             $table->string('alamat', 100);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
