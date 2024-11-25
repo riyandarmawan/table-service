@@ -10,8 +10,10 @@ Route::post('/auth/login', [UserController::class, 'loginProcess']);
 Route::post('/auth/logout', [UserController::class, 'logout']);
 
 Route::middleware('auth')->group(callback: function() {
+    // dashboard
     Route::get('/', [DashboardController::class, 'index']);
 
+    // menu
     Route::get('/menu', [MenuController::class, 'index']);
     Route::post('/menu/create', [MenuController::class, 'store']);
     Route::get('/menu/choice/{id_menu}', [MenuController::class, 'choice']);

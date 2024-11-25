@@ -27,6 +27,13 @@
                         </a>
                     </li>
                     <li>
+                        <a href="/pelanggan"
+                            class="{{ Request::is('pelanggan*') ? 'sidebar-active' : '' }} flex items-center gap-2 rounded px-2 py-1 text-2xl font-semibold hover:bg-blue-600">
+                            <span class="i-mdi-people mt-1 text-3xl"></span>
+                            Pelanggan
+                        </a>
+                    </li>
+                    <li>
                         <a href="/meja"
                             class="{{ Request::is('meja*') ? 'sidebar-active' : '' }} flex items-center gap-2 rounded px-2 py-1 text-2xl font-semibold hover:bg-blue-600">
                             <span class="i-mdi-book-check mt-1 text-3xl"></span>
