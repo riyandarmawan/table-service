@@ -13,5 +13,8 @@ Route::middleware('auth')->group(callback: function() {
     Route::get('/', [DashboardController::class, 'index']);
 
     Route::get('/menu', [MenuController::class, 'index']);
-    Route::post('/menu/tambah', [MenuController::class, 'store']);
+    Route::post('/menu/create', [MenuController::class, 'store']);
+    Route::get('/menu/choice/{id_menu}', [MenuController::class, 'choice']);
+    Route::post('/menu/update/{id_menu}', [MenuController::class, 'update']);
+    Route::post('/menu/delete/{id_menu}', [MenuController::class, 'destroy']);
 });

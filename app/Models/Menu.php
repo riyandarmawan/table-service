@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Menu extends Model
 {
     /** @use HasFactory<\Database\Factories\MenuFactory> */
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $primaryKey = 'id_menu';
 
@@ -20,7 +21,7 @@ class Menu extends Model
     protected $guarded = [];
 
     public static function generateIdMenu() {
-        $lastMenu = self::orderBy('id_menu', 'desc')->first(); // Get the latest record
+        $lastMenu = self::withTrashed()->orderBy('id_menu', 'desc')->first(); // Get the latest record
         if ($lastMenu) {
             $lastId = $lastMenu->id_menu;
             $number = (int) substr($lastId, 3); // Extract the numeric part

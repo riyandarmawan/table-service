@@ -76,23 +76,8 @@
                 {{ $slot }}
             </main>
         </div>
-
-        <div x-cloak x-show="showModalLogout"
-            class="absolute inset-0 z-20 flex items-center justify-center bg-gray-500 bg-opacity-50">
-            <div @click.outside="showModalLogout = false"
-                class="rounded-md border border-gray-200 bg-gray-100 p-4 shadow-md">
-                <h1 class="min-w-96 mb-4 text-3xl font-bold">Peringatan</h1>
-                <p class="mb-4">Apakah anda yakin ingin keluar dari akun ini?</p>
-                <div class="flex justify-end gap-2">
-                    <form action="/auth/logout" method="POST">
-                        @csrf
-                        <button class="rounded bg-blue-500 px-4 py-2 text-white shadow">Ya, saya ingin keluar</button>
-                    </form>
-                    <button @click="showModalLogout = false"
-                        class="rounded bg-red-500 px-4 py-2 text-white shadow">Tidak</button>
-                </div>
-            </div>
-        </div>
+        
+        <x-modal modalName="Logout" bodyText="Peringatan apakah anda yakin ingin keluar dari akun ini?" href="/auth/logout" confirmText="Ya, saya ingin keluar" cancelText="Tidak"></x-modal>
 
         {{ $modal ?? '' }}
     </div>

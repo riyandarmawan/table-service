@@ -41,4 +41,56 @@ class MenuController extends Controller
 
         return redirect('/menu')->with('error', value: 'Menu baru gagal ditambahkan!');
     }
+
+    public function choice($id_menu) {
+        $menu = new Menu();
+
+        $menus = $menu->all();
+        
+        $menu = $menu->find($id_menu);
+
+        $idMenu = $menu->id_menu;
+
+        $data = [
+            'title' => 'Daftar Menu',
+            'menus' => $menus,
+            'menu' => $menu,
+            'idMenu' => $idMenu
+        ];
+
+        return view('pages.menu.index', $data);
+    }
+
+    public function update(Request $request, $id_menu) {
+        $request->validate([
+            'id_menu' => 'required',
+            'nama_menu' => 'required',
+            'harga' => 'required',
+        ]);
+
+        $menu = Menu::find($id_menu);
+
+        $menu->id_menu = $request->input('id_menu');
+        $menu->nama_menu = $request->input('nama_menu');
+        $hargaFormatted = $request->input('harga');
+        $menu->harga = (int) preg_replace('/[^\d]/', '', $hargaFormatted);
+
+        if ($menu->save()) {
+            return redirect('/menu')->with('success', 'Menu berhasil diubah!');
+        }
+
+        return redirect('/menu')->with('error', value: 'Menu gagal diubah!');
+    }
+
+    public function destroy($id_menu) {
+        $menu = new Menu();
+
+        $menu = $menu->find($id_menu);
+
+        if($menu->delete()) {
+            return redirect('/menu')->with('success', value: 'Menu berhasil dihapus!');
+        }
+
+        return redirect('/menu')->with('error', value: 'Menu gagal dihapus!');
+    }
 }

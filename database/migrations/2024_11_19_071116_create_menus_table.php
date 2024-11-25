@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nama_menu', 50);
             $table->integer('harga');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
