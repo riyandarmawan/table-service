@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PesananController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MejaController;
 use App\Http\Controllers\MenuController;
@@ -18,16 +19,16 @@ Route::middleware('auth')->group(callback: function() {
     // pelanggan
     Route::get('/pelanggan', [PelangganController::class, 'index']);
     Route::post('/pelanggan/create', [PelangganController::class, 'store']);
-    Route::get('/pelanggan/choice/{id_menu}', [PelangganController::class, 'choice']);
-    Route::post('/pelanggan/update/{id_menu}', [PelangganController::class, 'update']);
-    Route::post('/pelanggan/delete/{id_menu}', [PelangganController::class, 'destroy']);
+    Route::get('/pelanggan/choice/{id_pelanggan}', [PelangganController::class, 'choice']);
+    Route::post('/pelanggan/update/{id_pelanggan}', [PelangganController::class, 'update']);
+    Route::post('/pelanggan/delete/{id_pelanggan}', [PelangganController::class, 'destroy']);
 
     // meja
     Route::get('/meja', [MejaController::class, 'index']);
     Route::post('/meja/create', [MejaController::class, 'store']);
-    Route::get('/meja/choice/{id_menu}', [MejaController::class, 'choice']);
-    Route::post('/meja/update/{id_menu}', [MejaController::class, 'update']);
-    Route::post('/meja/delete/{id_menu}', [MejaController::class, 'destroy']);
+    Route::get('/meja/choice/{id_meja}', [MejaController::class, 'choice']);
+    Route::post('/meja/update/{id_meja}', [MejaController::class, 'update']);
+    Route::post('/meja/delete/{id_meja}', [MejaController::class, 'destroy']);
 
     // menu
     Route::get('/menu', [MenuController::class, 'index']);
@@ -35,4 +36,12 @@ Route::middleware('auth')->group(callback: function() {
     Route::get('/menu/choice/{id_menu}', [MenuController::class, 'choice']);
     Route::post('/menu/update/{id_menu}', [MenuController::class, 'update']);
     Route::post('/menu/delete/{id_menu}', [MenuController::class, 'destroy']);
+
+    // pesanan
+    Route::get('/pesanan', [PesananController::class, 'index']);
+    Route::get('/pesanan/create', [PesananController::class, 'create']);
+    Route::post('/pesanan/create', [PesananController::class, 'store']);
+    Route::get('/pesanan/choice/{id_pesanan}', [PesananController::class, 'choice']);
+    Route::post('/pesanan/update/{id_pesanan}', [PesananController::class, 'update']);
+    Route::post('/pesanan/delete/{id_pesanan}', [PesananController::class, 'destroy']);
 });

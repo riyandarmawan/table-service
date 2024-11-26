@@ -49,10 +49,10 @@
                         </a>
                     </li>
                     <li>
-                        <a href="/order"
-                            class="{{ Request::is('order*') ? 'sidebar-active' : '' }} flex items-center gap-2 rounded px-2 py-1 text-2xl font-semibold hover:bg-blue-600">
-                            <span class="i-mdi-phone mt-1 text-3xl"></span>
-                            Order
+                        <a href="/pesanan"
+                            class="{{ Request::is('pesanan*') ? 'sidebar-active' : '' }} flex items-center gap-2 rounded px-2 py-1 text-2xl font-semibold hover:bg-blue-600">
+                            <span class="i-mdi-list-box mt-1 text-3xl"></span>
+                            Pesanan
                         </a>
                     </li>
                     <li>
