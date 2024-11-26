@@ -19,3 +19,11 @@ window.gender = (value) => {
 
     return gender[value] || 'Tidak diketahui';
 }
+
+window.chairCapacity = (value) => {
+    if (!value) return '';
+
+    value = String(value).replace(/[^\d]/g, '');
+
+    return `${value} Orang`
+}

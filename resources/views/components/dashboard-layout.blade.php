@@ -9,7 +9,8 @@
             </div>
             <div class="flex items-center">
                 <form action="" method="GET">
-                    <input type="text" name="search" id="search" placeholder="Cari data di sini" value="{{ request('search') ?? '' }}"
+                    <input type="text" name="search" id="search" placeholder="Cari data di sini"
+                        value="{{ request('search') ?? '' }}"
                         class="rounded-full border border-gray-200 px-4 py-2 outline-none focus:ring focus:ring-blue-700">
                 </form>
             </div>
@@ -36,7 +37,7 @@
                     <li>
                         <a href="/meja"
                             class="{{ Request::is('meja*') ? 'sidebar-active' : '' }} flex items-center gap-2 rounded px-2 py-1 text-2xl font-semibold hover:bg-blue-600">
-                            <span class="i-mdi-book-check mt-1 text-3xl"></span>
+                            <span class="i-mdi-table-furniture mt-1 text-3xl"></span>
                             Meja
                         </a>
                     </li>
@@ -83,20 +84,21 @@
                 {{ $slot }}
             </main>
         </div>
-        
-        <x-modal modalName="Logout" bodyText="Peringatan apakah anda yakin ingin keluar dari akun ini?" href="/auth/logout" confirmText="Ya, saya ingin keluar" cancelText="Tidak"></x-modal>
+
+        <x-modal modalName="Logout" bodyText="Peringatan apakah anda yakin ingin keluar dari akun ini?"
+            href="/auth/logout" confirmText="Ya, saya ingin keluar" cancelText="Tidak"></x-modal>
 
         {{ $modal ?? '' }}
     </div>
 
     <script>
         @if (Session::get('success'))
-            document.addEventListener('DOMContentLoaded', () => {
+            docuistener('DOMContentLoaded', () => {
                 const message = `{{ Session::get('success') }}`;
                 window.successAlert(message);
             });
         @elseif (Session::get('error'))
-            document.addEventListener('DOMContentLoaded', () => {
+            docudEventListener('DOMContentLoaded', () => {
                 const message = `{{ Session::get('error') }}`;
                 window.errorAlert(message);
             });

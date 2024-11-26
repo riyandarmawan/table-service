@@ -4,7 +4,7 @@
 
         <div class="flex flex-nowrap gap-4">
             <div class="min-w-72 h-fit rounded-md border bg-white p-4 shadow">
-                <h1 class="mb-4 text-3xl font-bold">Tambah Menu</h1>
+                <h1 class="mb-4 text-3xl font-bold">{{ Request::is('meja') ? 'Tambah' : 'Ubah' }} Menu</h1>
                 <form action="{{ Request::is('menu') ? '/menu/create' : '/menu/update/' . $idMenu }}" method="POST">
                     @csrf
                     <div class="mb-4">
@@ -58,7 +58,7 @@
             </div>
 
             <div class="w-full overflow-y-auto" style="height: calc(100vh - 180px)">
-                <table class="w-full table-auto border-collapse mb-4">
+                <table class="mb-4 w-full table-auto border-collapse">
                     <thead>
                         <th>Kode Menu</th>
                         <th>Nama Menu</th>

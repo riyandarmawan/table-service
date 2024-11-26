@@ -22,7 +22,9 @@
                             class="{{ $errors->has('password') ? 'input-invalid' : 'input-valid' }} block w-full rounded-md border px-4 py-2 shadow outline-none focus:ring lg:text-lg">
                         <div
                             class="absolute right-0 top-0 flex h-full items-center justify-center rounded-br-md rounded-tr-md bg-gray-200 px-4">
-                            <span @click="showPassword = !showPassword" :class="showPassword ? 'i-mdi-eye-off' : 'i-mdi-eye'" class="cursor-pointer text-xl"></span>
+                            <span @click="showPassword = !showPassword"
+                                :class="showPassword ? 'i-mdi-eye-off' : 'i-mdi-eye'"
+                                class="cursor-pointer text-xl"></span>
                         </div>
                     </div>
                     @error('password')

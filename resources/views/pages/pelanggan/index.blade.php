@@ -3,8 +3,9 @@
         <h1 class="mb-6 text-3xl font-bold">{{ $title }}</h1>
 
         <div class="flex flex-nowrap gap-4">
-            <div class="min-w-72 h-fit rounded-md border bg-white p-4 shadow overflow-y-auto" style="max-height: calc(100vh - 180px)">
-                <h1 class="mb-4 text-3xl font-bold">Tambah Pelanggan</h1>
+            <div class="min-w-72 h-fit overflow-y-auto rounded-md border bg-white p-4 shadow"
+                style="max-height: calc(100vh - 180px)">
+                <h1 class="mb-4 text-3xl font-bold">{{ Request::is('meja') ? 'Tambah' : 'Ubah' }} Pelanggan</h1>
                 <form action="{{ Request::is('pelanggan') ? '/pelanggan/create' : '/pelanggan/update/' . $idPelanggan }}"
                     method="POST">
                     @csrf
@@ -59,7 +60,7 @@
                         <label for="alamat" class="min-w-28 mr-4 inline-block font-medium">Alamat</label>
                         <textarea type="text" name="alamat" id="alamat" {{ $errors->has('alamat') ? 'focused' : '' }} required
                             class="{{ $errors->has('alamat') ? 'input-invalid' : 'input-valid' }} w-full rounded border bg-gray-100 px-4 py-2 shadow outline-none focus:ring">
-                            {{ $errors->has('alamat') ? ($pelanggan->alamat ?? '') : old('alamat', $pelanggan->alamat ?? '') }}
+                            {{ $errors->has('alamat') ? $pelanggan->alamat ?? '' : old('alamat', $pelanggan->alamat ?? '') }}
                         </textarea>
                         @error('alamat')
                             <p class="pl-4 pt-1 text-sm font-semibold text-red-500">{{ $message }}</p>
@@ -85,7 +86,7 @@
             </div>
 
             <div class="w-full overflow-y-auto" style="height: calc(100vh - 180px)">
-                <table class="w-full table-auto border-collapse mb-4">
+                <table class="mb-4 w-full table-auto border-collapse">
                     <thead>
                         <th>Kode Pelanggan</th>
                         <th>Nama Pelanggan</th>
