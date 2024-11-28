@@ -33,11 +33,11 @@ input:read-only {
 }
 
 .modal-background {
-    @apply absolute inset-0 bg-gray-500 bg-opacity-40 flex items-center justify-center
+    @apply absolute inset-0 bg-gray-300 bg-opacity-40 flex items-center justify-center
 }
 
 .loading-animation {
-    @apply p-4 border-4 border-t-blue-500 border-gray-100 rounded-full animate-spin
+    @apply p-4 border-4 border-t-blue-500 border-gray-300 rounded-full animate-spin
 }
 
 .button-primary {
