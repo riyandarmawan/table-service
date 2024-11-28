@@ -1,6 +1,6 @@
 <x-dashboard-layout :$title>
     <div class="p-4">
-        <div class="grid grid-cols-2 gap-4">
+        <div class="flex flex-nowrap gap-4">
             <div class="h-fit rounded-md border bg-white p-4 shadow">
                 <h1 class="mb-4 text-3xl font-bold">{{ Request::is('meja') ? 'Tambah' : 'Ubah' }} Pesanan</h1>
                 <form action="{{ Request::is('pesanan') ? '/pesanan/create' : '/pesanan/update/' . $idPesanan }}"
@@ -17,12 +17,12 @@
                         @enderror
                     </div>
                     <div class="mb-4">
-                        <label for="nama_pesanan" class="min-w-28 mr-4 inline-block font-medium">Nama Pesanan</label>
-                        <input type="text" name="nama_pesanan" id="nama_pesanan"
-                            value="{{ $errors->has('nama_pesanan') ? $pesanan->nama_pesanan ?? '' : old('nama_pesanan', $pesanan->nama_pesanan ?? '') }}"
-                            {{ $errors->has('nama_pesanan') ? 'focused' : '' }} required
+                        <label for="id_menu" class="min-w-28 mr-4 inline-block font-medium">ID Menu</label>
+                        <input type="text" name="id_menu" id="id_menu" x-init="menuFinder()"
+                            value="{{ $errors->has('id_menu') ? $pesanan->id_menu ?? '' : old('id_menu', $pesanan->id_menu ?? '') }}"
+                            {{ $errors->has('id_menu') ? 'focused' : '' }} required
                             class="{{ $errors->has('nama_pesanan') ? 'input-invalid' : 'input-valid' }} w-full rounded border bg-gray-100 px-4 py-2 shadow outline-none focus:ring">
-                        @error('nama_pesanan')
+                        @error('id_menu')
                             <p class="pl-4 pt-1 text-sm font-semibold text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
@@ -42,8 +42,10 @@
                 </form>
             </div>
 
-            <div class="overflow-y-auto border shadow" style="height: calc(100vh - 180px)">
+            <div id="data-finder-box" class="overflow-y-auto p-4 border shadow w-full relative rounded" style="height: calc(100vh - 120px)">
             </div>
         </div>
     </div>
+
+    <script src="/js/pesanan.js"></script>
 </x-dashboard-layout>

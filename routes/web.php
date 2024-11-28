@@ -36,6 +36,7 @@ Route::middleware('auth')->group(callback: function() {
     Route::get('/menu/choice/{id_menu}', [MenuController::class, 'choice']);
     Route::post('/menu/update/{id_menu}', [MenuController::class, 'update']);
     Route::post('/menu/delete/{id_menu}', [MenuController::class, 'destroy']);
+    Route::get('/api/menu/get/{id_menu}', [MenuController::class, 'get']);
 
     // pesanan
     Route::get('/pesanan', [PesananController::class, 'index']);
