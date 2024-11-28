@@ -9,6 +9,7 @@
                 <table class="mb-4 w-full table-auto border-collapse">
                     <thead>
                         <th>Kode Pesanan</th>
+                        <th>Kode Meja</th>
                         <th>Kapasitas Kursi dari Meja yang dipesan</th>
                         <th>Nama Pelanggan</th>
                         <th>Nama Menu</th>
@@ -20,6 +21,7 @@
                         @foreach ($pesanans as $pesanan)
                             <tr>
                                 <td>{{ $pesanan->id_pesanan }}</td>
+                                <td>{{ $pesanan->meja->id_meja }}</td>
                                 <td x-text="window.chairCapacity('{{ $pesanan->meja->kapasitas_kursi }}')"></td>
                                 <td>{{ $pesanan->pelanggan->nama_pelanggan }}</td>
                                 <td>{{ $pesanan->menu->nama_menu }}</td>
