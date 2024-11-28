@@ -22,6 +22,7 @@ Route::middleware('auth')->group(callback: function() {
     Route::get('/pelanggan/choice/{id_pelanggan}', [PelangganController::class, 'choice']);
     Route::post('/pelanggan/update/{id_pelanggan}', [PelangganController::class, 'update']);
     Route::post('/pelanggan/delete/{id_pelanggan}', [PelangganController::class, 'destroy']);
+    Route::get('/api/pelanggan/get/{id_pelanggan}', [PelangganController::class, 'get']);
 
     // meja
     Route::get('/meja', [MejaController::class, 'index']);
@@ -29,6 +30,7 @@ Route::middleware('auth')->group(callback: function() {
     Route::get('/meja/choice/{id_meja}', [MejaController::class, 'choice']);
     Route::post('/meja/update/{id_meja}', [MejaController::class, 'update']);
     Route::post('/meja/delete/{id_meja}', [MejaController::class, 'destroy']);
+    Route::get('/api/meja/get/{id_meja}', [MejaController::class, 'get']);
 
     // menu
     Route::get('/menu', [MenuController::class, 'index']);

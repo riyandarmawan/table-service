@@ -21,7 +21,7 @@
                         <label for="kapasitas_kursi" class="min-w-28 mr-4 inline-block font-medium">Kapasitas
                             Kursi</label>
                         <input type="text" name="kapasitas_kursi" id="kapasitas_kursi"
-                            value="{{ $errors->has('kapasitas_kursi') ? '' : old('kapasitas_kursi', '') }}"
+                            value="{{ $errors->has('kapasitas_kursi') ? ($meja->kapasitas_kursi ?? '') : old('kapasitas_kursi', $meja->kapasitas_kursi ?? '') }}"
                             {{ $errors->has('kapasitas_kursi') ? 'focused' : '' }} required
                             class="{{ $errors->has('kapasitas_kursi') ? 'input-invalid' : 'input-valid' }} w-full rounded border bg-gray-100 px-4 py-2 shadow outline-none focus:ring">
                         @error('kapasitas_kursi')

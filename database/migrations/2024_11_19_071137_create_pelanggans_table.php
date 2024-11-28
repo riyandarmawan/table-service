@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('pelanggans', function (Blueprint $table) {
             $table->string('id_pelanggan')->primary();
             $table->string('nama_pelanggan', 50);
-            $table->enum('jenis_kelamin', ['l', 'p']);
+            $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
             $table->string('no_hp', 13);
             $table->string('alamat', 100);
             $table->timestamps();

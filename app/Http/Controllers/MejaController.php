@@ -91,4 +91,17 @@ class MejaController extends Controller
 
         return redirect('/meja')->with('error', value: 'Meja gagal dihapus!');
     }
+
+    public function get($id_meja)
+    {
+        $meja = new Meja();
+
+        $mejas = $meja->where('id_meja', 'like', "%$id_meja%")->get() ?? $meja->all();
+
+        if (count($mejas)) {
+            return response()->json($mejas, 200);
+        }
+
+        return response()->json(['message' => 'Meja tidak ditemukan', 404]);
+    }
 }

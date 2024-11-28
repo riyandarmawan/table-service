@@ -93,12 +93,12 @@
 
     <script>
         @if (Session::get('success'))
-            docuistener('DOMContentLoaded', () => {
+            document.addEventListener('DOMContentLoaded', () => {
                 const message = `{{ Session::get('success') }}`;
                 window.successAlert(message);
             });
         @elseif (Session::get('error'))
-            docudEventListener('DOMContentLoaded', () => {
+            document.addEventListener('DOMContentLoaded', () => {
                 const message = `{{ Session::get('error') }}`;
                 window.errorAlert(message);
             });

@@ -36,11 +36,11 @@
                             {{ $errors->has('jenis_kelamin') ? 'focused' : '' }} required
                             class="{{ $errors->has('jenis_kelamin') ? 'input-invalid' : 'input-valid' }} w-full rounded border bg-gray-100 px-4 py-2 shadow outline-none focus:ring">
                             <option
-                                {{ $errors->has('jenis_kelamin') ? ($pelanggan->jenis_kelamin === 'l' ? 'selected' : '') : (old('jenis_kelamin') === 'l' ? 'selected' : '') }}
-                                value="l">Laki-laki</option>
+                                {{ $errors->has('jenis_kelamin') ? ($pelanggan->jenis_kelamin === 'Laki-laki' ? 'selected' : '') : (old('jenis_kelamin') === 'Laki-laki' ? 'selected' : '') }}
+                                value="Laki-laki">Laki-laki</option>
                             <option
-                                {{ $errors->has('jenis_kelamin') ? ($pelanggan->jenis_kelamin === 'p' ? 'selected' : '') : (old('jenis_kelamin') === 'p' ? 'selected' : '') }}
-                                value="p">Perempuan</option>
+                                {{ $errors->has('jenis_kelamin') ? ($pelanggan->jenis_kelamin === 'Perempuan' ? 'selected' : '') : (old('jenis_kelamin') === 'Perempuan' ? 'selected' : '') }}
+                                value="Perempuan">Perempuan</option>
                         </select>
                         @error('jenis_kelamin')
                             <p class="pl-4 pt-1 text-sm font-semibold text-red-500">{{ $message }}</p>
@@ -100,7 +100,7 @@
                             <tr>
                                 <td>{{ $pelanggan->id_pelanggan }}</td>
                                 <td>{{ $pelanggan->nama_pelanggan }}</td>
-                                <td x-text="window.gender('{{ $pelanggan->jenis_kelamin }}')"></td>
+                                <td>{{ $pelanggan->jenis_kelamin }}</td>
                                 <td>{{ $pelanggan->no_hp }}</td>
                                 <td>{{ $pelanggan->alamat }}</td>
                                 <td>

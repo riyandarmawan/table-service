@@ -11,15 +11,6 @@ window.formatToIdr = (value) => {
     }).format(value);
 }
 
-window.gender = (value) => {
-    const gender = {
-        l: 'Laki-laki',
-        p: 'Perempuan'
-    }
-
-    return gender[value] || 'Tidak diketahui';
-}
-
 window.chairCapacity = (value) => {
     if (!value) return '';
 

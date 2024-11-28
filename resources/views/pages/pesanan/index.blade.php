@@ -27,7 +27,7 @@
                                 <td>{{ $pesanan->menu->nama_menu }}</td>
                                 <td>{{ $pesanan->meja->id_meja }}</td>
                                 <td>{{ $pesanan->meja->kapasitas_kursi }}</td>
-                                <td>{{ $pesanan->pelanggan->kode_pelanggan }}</td>
+                                <td>{{ $pesanan->pelanggan->id_pelanggan }}</td>
                                 <td>{{ $pesanan->pelanggan->nama_pelanggan }}</td>
                                 <td>{{ $pesanan->jumlah }}</td>
                                 <td>{{ $pesanan->user->name }}</td>

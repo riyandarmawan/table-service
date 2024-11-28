@@ -100,4 +100,17 @@ class PelangganController extends Controller
 
         return redirect('/pelanggan')->with('error', value: 'Pelanggan gagal dihapus!');
     }
+
+    public function get($id_pelanggan)
+    {
+        $pelanggan = new Pelanggan();
+
+        $pelanggans = $pelanggan->where('id_pelanggan', 'like', "%$id_pelanggan%")->get() ?? $pelanggan->all();
+
+        if (count($pelanggans)) {
+            return response()->json($pelanggans, 200);
+        }
+
+        return response()->json(['message' => 'Meja tidak ditemukan', 404]);
+    }
 }

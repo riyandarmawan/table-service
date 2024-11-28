@@ -38,22 +38,22 @@ class Pesanan extends Model
 
     public function menu(): BelongsTo
     {
-        return $this->belongsTo(Menu::class);
+        return $this->belongsTo(Menu::class, 'id_menu', 'id_menu');
     }
 
     public function meja(): BelongsTo
     {
-        return $this->belongsTo(Meja::class);
+        return $this->belongsTo(Meja::class, 'id_meja', 'id_meja');
     }
 
     public function pelanggan(): BelongsTo
     {
-        return $this->belongsTo(Pelanggan::class);
+        return $this->belongsTo(Pelanggan::class, 'id_pelanggan', 'id_pelanggan');
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'id_user', 'id');
     }
 
     public function transaksis(): HasMany

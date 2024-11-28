@@ -24,7 +24,7 @@ return new class extends Migration
             $table->foreign(columns: 'id_menu')->references('id_menu')->on('menus')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign(columns: 'id_meja')->references('id_meja')->on('mejas')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('id_pelanggan')->references('id_pelanggan')->on('pelanggans')->onUpdate('cascade')->onDelete('cascade');
-            $table->foreign('id_user')->references('id_user')->on('users')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('id_user')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 
