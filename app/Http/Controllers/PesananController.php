@@ -69,25 +69,21 @@ class PesananController extends Controller
     {
         $pesanan = new Pesanan();
 
-        $pesanans = $pesanan->filter(request(['search']))->paginate(10);
-
         $pesanan = $pesanan->find($id_pesanan);
 
         $idPesanan = $pesanan->id_pesanan;
 
         $data = [
             'title' => 'Daftar Pesanan',
-            'pesanans' => $pesanans,
             'pesanan' => $pesanan,
             'idPesanan' => $idPesanan
         ];
 
-        return view('pages.pesanan.index', $data);
+        return view('pages.pesanan.choice', $data);
     }
 
     public function update(Request $request, $id_pesanan)
     {
-
         $request->validate([
             'id_pesanan' => 'required',
             'id_menu' => 'required',
