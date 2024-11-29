@@ -43,3 +43,7 @@ input:read-only {
 .button-primary {
     @apply inline-block rounded bg-blue-500 px-4 py-2 text-lg font-medium text-white shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80
 }
+
+.button-primary:disabled {
+    @apply bg-opacity-60
+}

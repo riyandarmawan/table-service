@@ -5,7 +5,7 @@
         <div class="flex flex-nowrap gap-4">
             <div class="min-w-72 h-fit overflow-y-auto rounded-md border bg-white p-4 shadow"
                 style="max-height: calc(100vh - 180px)">
-                <h1 class="mb-4 text-3xl font-bold">{{ Request::is('meja') ? 'Tambah' : 'Ubah' }} Pelanggan</h1>
+                <h1 class="mb-4 text-3xl font-bold">{{ Request::is('pelanggan') ? 'Tambah' : 'Ubah' }} Pelanggan</h1>
                 <form action="{{ Request::is('pelanggan') ? '/pelanggan/create' : '/pelanggan/update/' . $idPelanggan }}"
                     method="POST">
                     @csrf

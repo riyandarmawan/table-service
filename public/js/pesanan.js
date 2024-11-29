@@ -6,6 +6,8 @@ const tbody = document.createElement('tbody');
 const h1 = document.createElement('h1');
 const p = document.createElement('p');
 
+const listOfChoosenMenu = [];
+
 function createLoadingAnimation() {
     const loadingContainer = document.createElement('div');
     loadingContainer.classList.add('modal-background');
@@ -20,7 +22,7 @@ function createLoadingAnimation() {
 }
 
 function createTitle(title) {
-    h1.textContent = `Cari ${title}`;
+    h1.textContent = `${title}`;
     h1.classList.add('font-bold', 'text-3xl', 'text-center', 'mb-4');
 
     dataFinderBox.appendChild(h1);
@@ -47,7 +49,7 @@ function createTableBody(data, keys, inputElement, primaryKeyColumn) {
         keys.forEach(key => {
             const td = document.createElement('td');
 
-            td.textContent = row[key];
+            td.textContent = key === 'harga' ? window.formatToIdr(row[key]) : row[key];
 
             tr.appendChild(td);
         });
@@ -56,8 +58,10 @@ function createTableBody(data, keys, inputElement, primaryKeyColumn) {
         button.textContent = 'Pilih';
         button.classList.add('button-primary');
         button.type = 'button';
-        button.addEventListener('click', () => {
+        button.addEventListener('click', (e) => {
             inputElement._x_model.set(row[primaryKeyColumn]);
+            listOfChoosenMenu.push(row);
+            e.target.disabled = true;
         });
 
         const td = document.createElement('td');
@@ -75,8 +79,8 @@ async function requestData(url) {
     return await response.json()
 }
 
-function dataNotFoundMessage() {
-    p.textContent = 'Data menu tidak ditemukan nih :(';
+function dataNotFoundMessage(message = 'Data menu tidak ditemukan nih :(') {
+    p.textContent = `${message}`;
     p.classList.add('font-medium', 'text-red-500', 'text-center');
 }
 
@@ -88,7 +92,7 @@ async function menuFinder(idMenu = 0) {
 
         const data = await requestData(`http://127.0.0.1:8000/api/menu/get/${idMenu}`);
 
-        createTitle('Menu');
+        createTitle('Cari Menu');
 
         if (data.length) {
             p.innerHTML = '';
@@ -98,7 +102,7 @@ async function menuFinder(idMenu = 0) {
             const columns = ['Kode Menu', 'Nama Menu', 'Harga', 'Aksi'];
             createTableHead(columns);
 
-            const keys = ['id_menu', 'nama_menu', 'harga', 'id_menu'];
+            const keys = ['id_menu', 'nama_menu', 'harga'];
 
             createTableBody(data, keys, idMenuElement, 'id_menu');
 
@@ -126,7 +130,7 @@ async function mejaFinder(idMeja = 0) {
 
         const data = await requestData(`http://127.0.0.1:8000/api/meja/get/${idMeja}`);
 
-        createTitle('Meja');
+        createTitle('Cari Meja');
 
         if (data.length) {
             p.innerHTML = '';
@@ -164,7 +168,7 @@ async function pelangganFinder(idPelanggan = 0) {
 
         const data = await requestData(`http://127.0.0.1:8000/api/pelanggan/get/${idPelanggan}`);
 
-        createTitle('Pelanggan');
+        createTitle('Cari Pelanggan');
 
         if (data.length) {
             p.innerHTML = '';
@@ -191,5 +195,34 @@ async function pelangganFinder(idPelanggan = 0) {
         if (dataFinderBox.contains(loadingAnimation)) {
             dataFinderBox.removeChild(loadingAnimation);
         }
+    }
+}
+
+function choosenMenu() {
+    dataFinderBox.innerHTML = '';
+
+    const data = listOfChoosenMenu;
+
+    createTitle('Daftar menu yang dipilih');
+
+    if (data.length) {
+        p.innerHTML = '';
+
+        const idMenuElement = document.getElementById('id_menu');
+
+        const columns = ['Kode Menu', 'Nama Menu', 'Harga', 'Aksi'];
+        createTableHead(columns);
+
+        const keys = ['id_menu', 'nama_menu', 'harga'];
+
+        createTableBody(data, keys, idMenuElement, 'id_menu');
+
+        dataFinderBox.appendChild(table);
+    } else {
+        table.innerHTML = '';
+
+        dataNotFoundMessage('Kamu belum memilih menu nih :(');
+        dataFinderBox.appendChild(p);
+
     }
 }

@@ -79,7 +79,7 @@ class PesananController extends Controller
             'idPesanan' => $idPesanan
         ];
 
-        return view('pages.pesanan.choice', $data);
+        return view('pages.pesanan.pilih', $data);
     }
 
     public function update(Request $request, $id_pesanan)

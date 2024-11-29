@@ -2,7 +2,7 @@
     <div x-data="{ showModalHapus: false }" class="p-4">
         <div class="flex flex-nowrap gap-4">
             <div class="h-fit rounded-md border bg-white p-4 shadow">
-                <h1 class="mb-4 text-3xl font-bold">{{ Request::is('meja') ? 'Tambah' : 'Ubah' }} Pesanan</h1>
+                <h1 class="mb-4 text-3xl font-bold">Ubah Pesanan</h1>
                 <form action="/pesanan/update/{{ $pesanan->id_pesanan }}" method="POST">
                     @csrf
                     <div class="mb-4">
