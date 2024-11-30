@@ -40,7 +40,7 @@ function createTableHead(columns) {
     table.appendChild(thead);
 }
 
-function createTableBody(data, keys, inputElement, primaryKeyColumn) {
+function createTableBody(data, dataType, keys, inputElement, primaryKeyColumn) {
     tbody.innerHTML = '';
 
     data.forEach(row => {
@@ -58,11 +58,18 @@ function createTableBody(data, keys, inputElement, primaryKeyColumn) {
         button.textContent = 'Pilih';
         button.classList.add('button-primary');
         button.type = 'button';
-        button.addEventListener('click', (e) => {
-            inputElement._x_model.set(row[primaryKeyColumn]);
-            listOfChoosenMenu.push(row);
-            e.target.disabled = true;
-        });
+        if (dataType === 'menu' || dataType === 'choosenMenu') {
+            button.addEventListener('click', (e) => {
+                listOfChoosenMenu.push(row);
+                e.textContent = 'Hapus';
+                button.classList.replace('button-primary', 'button-delete');
+            });
+        } else {
+            button.addEventListener('click', (e) => {
+                inputElement ? inputElement._x_model.set(row[primaryKeyColumn]) : '';
+                e.target.disabled = true;
+            });
+        }
 
         const td = document.createElement('td');
         td.appendChild(button);
@@ -104,7 +111,7 @@ async function menuFinder(idMenu = 0) {
 
             const keys = ['id_menu', 'nama_menu', 'harga'];
 
-            createTableBody(data, keys, idMenuElement, 'id_menu');
+            createTableBody(data, 'menu', keys, idMenuElement, 'id_menu');
 
             dataFinderBox.appendChild(table);
         } else {
@@ -142,7 +149,7 @@ async function mejaFinder(idMeja = 0) {
 
             const keys = ['id_meja', 'kapasitas_kursi'];
 
-            createTableBody(data, keys, idMejaElement, 'id_meja');
+            createTableBody(data, 'meja', keys, idMejaElement, 'id_meja');
 
             dataFinderBox.appendChild(table);
         } else {
@@ -180,7 +187,7 @@ async function pelangganFinder(idPelanggan = 0) {
 
             const keys = ['id_pelanggan', 'nama_pelanggan', 'jenis_kelamin', 'no_hp', 'alamat'];
 
-            createTableBody(data, keys, idPelangganElement, 'id_pelanggan');
+            createTableBody(data, 'pelanggan', keys, idPelangganElement, 'id_pelanggan');
 
             dataFinderBox.appendChild(table);
         } else {
@@ -215,7 +222,7 @@ function choosenMenu() {
 
         const keys = ['id_menu', 'nama_menu', 'harga'];
 
-        createTableBody(data, keys, idMenuElement, 'id_menu');
+        createTableBody(data, 'choosenMenu', keys, idMenuElement, 'id_menu');
 
         dataFinderBox.appendChild(table);
     } else {

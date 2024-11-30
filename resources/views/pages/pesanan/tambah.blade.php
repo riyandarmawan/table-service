@@ -48,14 +48,21 @@
                             <p class="pl-4 pt-1 text-sm font-semibold text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
+                    <div class="flex flex-col gap-4">
                     <button @click="menuFinder()" type="button"
                         class="rounded bg-blue-500 text-white px-4 py-2 w-full shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80 flex items-center justify-center gap-2 font-semibold">
                         <span class="i-mdi-food text-2xl"></span>
                         <span class="mt-1">Pilih Menu</span>
                     </button>
+                    <button @click="choosenMenu()" type="button"
+                        class="rounded bg-blue-500 text-white px-4 py-2 w-full shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80 flex items-center justify-center gap-2 font-semibold">
+                        <span class="i-mdi-list-box text-2xl"></span>
+                        <span class="mt-1">Menu yang anda pilih</span>
+                    </button>
                     <input type="hidden" id="id_user" name="id_user" value="{{ Auth::user()->id }}">
                     <button
-                        class="w-full rounded bg-blue-500 px-4 py-2 font-medium text-white shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80">Tambah</button>
+                        class="w-full rounded bg-blue-500 px-4 py-2 font-medium text-white shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80">Tambahkan pesanan</button>
+                        </div>
                 </form>
             </div>
 
