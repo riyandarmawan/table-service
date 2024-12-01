@@ -1,235 +1,270 @@
-const dataFinderBox = document.getElementById('data-finder-box');
-const loadingAnimation = createLoadingAnimation();
-const table = document.createElement('table');
-const thead = document.createElement('thead');
-const tbody = document.createElement('tbody');
-const h1 = document.createElement('h1');
-const p = document.createElement('p');
-
-const listOfChoosenMenu = [];
-
-function createLoadingAnimation() {
-    const loadingContainer = document.createElement('div');
-    loadingContainer.classList.add('modal-background');
-
-    const spinner = document.createElement('div');
-    spinner.classList.add('loading-animation');
-
-    loadingContainer.innerHTML = '';
-    loadingContainer.appendChild(spinner);
-
-    return loadingContainer;
+// Utility: Create DOM Elements
+function createElement(tag, options = {}, children = []) {
+    const element = document.createElement(tag);
+    Object.entries(options).forEach(([key, value]) => {
+        if (key === 'classes') element.classList.add(...value);
+        else if (key === 'text') element.textContent = value;
+        else element[key] = value;
+    });
+    children.forEach(child => element.appendChild(child));
+    return element;
 }
 
-function createTitle(title) {
-    h1.textContent = `${title}`;
-    h1.classList.add('font-bold', 'text-3xl', 'text-center', 'mb-4');
+// Utility: Fetch API Data
+async function fetchData(url) {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Error: ${response.status} - ${response.statusText}`);
+    return response.json();
+}
 
+// Utility: Loading Animation
+function createLoadingAnimation() {
+    return createElement('div', { classes: ['modal-background'] }, [
+        createElement('div', { classes: ['loading-animation'] })
+    ]);
+}
+
+// Global Variables
+const dataFinderBox = document.getElementById('data-finder-box');
+const loadingAnimation = createLoadingAnimation();
+const h1 = createElement('h1', {
+    classes: ['font-bold', 'text-3xl', 'text-center', 'mb-4'],
+});
+const p = createElement('p', {
+    classes: ['font-medium', 'text-red-500', 'text-center'],
+});
+const table = createElement('table');
+const thead = createElement('thead');
+const tbody = createElement('tbody');
+const listOfChosenMenus = [];
+
+// Map to track selected rows globally
+let selectedRows = {};
+
+// Render Title
+function renderTitle(title) {
+    h1.textContent = title;
     dataFinderBox.appendChild(h1);
 }
 
-function createTableHead(columns) {
+// Render Table Head
+function renderTableHead(columns) {
     thead.innerHTML = '';
-
     columns.forEach(column => {
-        const th = document.createElement('th');
-        th.textContent = column;
-
+        const th = createElement('th', { text: column });
         thead.appendChild(th);
     });
     table.appendChild(thead);
 }
 
-function createTableBody(data, dataType, keys, inputElement, primaryKeyColumn) {
+// Render Table Body for Menu
+function renderMenuTableBody(data, keys) {
     tbody.innerHTML = '';
 
     data.forEach(row => {
-        const tr = document.createElement('tr');
-
+        const tr = createElement('tr');
         keys.forEach(key => {
-            const td = document.createElement('td');
-
-            td.textContent = key === 'harga' ? window.formatToIdr(row[key]) : row[key];
-
+            const td = createElement('td', {
+                text: key === 'harga' ? window.formatToIdr(row[key]) : row[key]
+            });
             tr.appendChild(td);
         });
 
-        const button = document.createElement('button');
-        button.textContent = 'Pilih';
-        button.classList.add('button-primary');
-        button.type = 'button';
-        if (dataType === 'menu' || dataType === 'choosenMenu') {
-            button.addEventListener('click', (e) => {
-                listOfChoosenMenu.push(row);
-                e.textContent = 'Hapus';
+        const button = createElement('button', {
+            text: 'Pilih',
+            classes: ['button-primary'],
+            type: 'button'
+        });
+
+        // Check if the menu is already chosen
+        const isSelected = listOfChosenMenus.some(menu => menu.id_menu === row.id_menu);
+
+        // Update button state based on selection
+        if (isSelected) {
+            button.textContent = 'Hapus';
+            button.classList.replace('button-primary', 'button-delete');
+        }
+
+        button.addEventListener('click', () => {
+            if (isSelected) {
+                // Remove the menu from the list
+                const index = listOfChosenMenus.findIndex(menu => menu.id_menu === row.id_menu);
+                if (index !== -1) {
+                    listOfChosenMenus.splice(index, 1); // Remove menu from selected list
+
+                    // After removing, update the button to 'Pilih' again
+                    button.textContent = 'Pilih';
+                    button.classList.replace('button-delete', 'button-primary');
+                }
+            } else {
+                // Add the menu to the list of chosen menus
+                listOfChosenMenus.push(row);
+
+                // Update the button text to 'Hapus' if added
+                button.textContent = 'Hapus';
                 button.classList.replace('button-primary', 'button-delete');
-            });
-        } else {
-            button.addEventListener('click', (e) => {
-                inputElement ? inputElement._x_model.set(row[primaryKeyColumn]) : '';
-                e.target.disabled = true;
-            });
-        }
+            }
 
-        const td = document.createElement('td');
-        td.appendChild(button);
-        tr.appendChild(td);
+            // Re-render the table body to reflect the state changes immediately
+            renderMenuTableBody(data, keys);
+        });
 
+        tr.appendChild(createElement('td', {}, [button]));
         tbody.appendChild(tr);
-        table.appendChild(tbody);
     });
+
+    table.appendChild(tbody);
 }
 
-async function requestData(url) {
-    const response = await fetch(url);
-    if (!response.ok) throw new Error(`Error: ${response.status} - ${response.statusText}`);
-    return await response.json()
+// Render Table Body for Generic Data (Customer, Table, etc.)
+function renderTableBody(data, keys, primaryKey) {
+    tbody.innerHTML = '';
+
+    data.forEach(row => {
+        const tr = createElement('tr');
+        keys.forEach(key => {
+            const td = createElement('td', { text: row[key] });
+            tr.appendChild(td);
+        });
+
+        const button = createElement('button', {
+            text: 'Pilih',
+            classes: ['button-primary'],
+            type: 'button'
+        });
+
+        const primaryKeyInput = document.getElementById(primaryKey);
+        const currentPrimaryKeyValue = primaryKeyInput ? primaryKeyInput._x_model.get() : null;
+
+        // Disable button if the primary key value matches the row's key
+        if (currentPrimaryKeyValue === row[primaryKey]) {
+            button.disabled = true;
+        }
+
+        button.addEventListener('click', () => {
+            // Re-enable previously selected button if any
+            if (selectedRows[primaryKey] && selectedRows[primaryKey] !== row[primaryKey]) {
+                const prevButton = tbody.querySelector(
+                    `button[data-id="${selectedRows[primaryKey]}"]`
+                );
+                if (prevButton) {
+                    prevButton.disabled = false;
+                }
+            }
+
+            // Update the state and disable the clicked button
+            selectedRows[primaryKey] = row[primaryKey];
+            primaryKeyInput._x_model.set(row[primaryKey]);
+            button.disabled = true;
+        });
+
+        // Assign a unique identifier to the button for tracking
+        button.setAttribute('data-id', row[primaryKey]);
+
+        tr.appendChild(createElement('td', {}, [button]));
+        tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
 }
 
-function dataNotFoundMessage(message = 'Data menu tidak ditemukan nih :(') {
-    p.textContent = `${message}`;
-    p.classList.add('font-medium', 'text-red-500', 'text-center');
+// Render Not Found Message
+function renderNotFoundMessage(message = 'Data tidak ditemukan :(') {
+    p.textContent = message;
+    if (!dataFinderBox.contains(table)) {
+        dataFinderBox.appendChild(p);
+    }
 }
 
-async function menuFinder(idMenu = 0) {
+// Generic Finder
+async function renderFinder(url, title, columns, keys, type, primaryKey = '') {
     try {
+        // Clear previous content (table and loading animation)
         dataFinderBox.innerHTML = '';
-
         dataFinderBox.appendChild(loadingAnimation);
 
-        const data = await requestData(`http://127.0.0.1:8000/api/menu/get/${idMenu}`);
+        const data = await fetchData(url);
 
-        createTitle('Cari Menu');
+        // Render Title only if there's a title
+        if (!dataFinderBox.contains(h1)) {
+            renderTitle(title);
+        }
 
+        // Render Table if there is data
         if (data.length) {
-            p.innerHTML = '';
+            renderTableHead(columns);
 
-            const idMenuElement = document.getElementById('id_menu');
+            if (type === 'menu') {
+                renderMenuTableBody(data, keys);
+            } else {
+                renderTableBody(data, keys, primaryKey);
+            }
 
-            const columns = ['Kode Menu', 'Nama Menu', 'Harga', 'Aksi'];
-            createTableHead(columns);
-
-            const keys = ['id_menu', 'nama_menu', 'harga'];
-
-            createTableBody(data, 'menu', keys, idMenuElement, 'id_menu');
-
-            dataFinderBox.appendChild(table);
+            if (!dataFinderBox.contains(p)) {
+                dataFinderBox.appendChild(table);
+            }
         } else {
-            table.innerHTML = '';
-
-            dataNotFoundMessage();
-            dataFinderBox.appendChild(p);
+            renderNotFoundMessage();
         }
     } catch (error) {
         console.error(error);
+        // Render Error message if there is an error
+        renderNotFoundMessage('Terjadi kesalahan dalam memuat data.');
     } finally {
+        // Remove loading animation once content is loaded or error occurs
         if (dataFinderBox.contains(loadingAnimation)) {
             dataFinderBox.removeChild(loadingAnimation);
         }
     }
 }
 
-async function mejaFinder(idMeja = 0) {
-    try {
-        dataFinderBox.innerHTML = '';
-
-        dataFinderBox.appendChild(loadingAnimation);
-
-        const data = await requestData(`http://127.0.0.1:8000/api/meja/get/${idMeja}`);
-
-        createTitle('Cari Meja');
-
-        if (data.length) {
-            p.innerHTML = '';
-
-            const idMejaElement = document.getElementById('id_meja');
-
-            const columns = ['Kode Meja', 'Kapasitas Kursi', 'Aksi'];
-            createTableHead(columns);
-
-            const keys = ['id_meja', 'kapasitas_kursi'];
-
-            createTableBody(data, 'meja', keys, idMejaElement, 'id_meja');
-
-            dataFinderBox.appendChild(table);
-        } else {
-            table.innerHTML = '';
-
-            dataNotFoundMessage();
-            dataFinderBox.appendChild(p);
-        }
-    } catch (error) {
-        console.error(error);
-    } finally {
-        if (dataFinderBox.contains(loadingAnimation)) {
-            dataFinderBox.removeChild(loadingAnimation);
-        }
-    }
+// Menu Finder
+function findMenu(idMenu = 0) {
+    renderFinder(
+        `http://127.0.0.1:8000/api/menu/get/${idMenu}`,
+        'Cari Menu',
+        ['Kode Menu', 'Nama Menu', 'Harga', 'Aksi'],
+        ['id_menu', 'nama_menu', 'harga'],
+        'menu'
+    );
 }
 
-async function pelangganFinder(idPelanggan = 0) {
-    try {
-        dataFinderBox.innerHTML = '';
-
-        dataFinderBox.appendChild(loadingAnimation);
-
-        const data = await requestData(`http://127.0.0.1:8000/api/pelanggan/get/${idPelanggan}`);
-
-        createTitle('Cari Pelanggan');
-
-        if (data.length) {
-            p.innerHTML = '';
-
-            const idPelangganElement = document.getElementById('id_pelanggan');
-
-            const columns = ['Kode Pelanggan', 'Nama Pelanggan', 'Jenis Kelamin', 'No HP', 'Alamat', 'Aksi'];
-            createTableHead(columns);
-
-            const keys = ['id_pelanggan', 'nama_pelanggan', 'jenis_kelamin', 'no_hp', 'alamat'];
-
-            createTableBody(data, 'pelanggan', keys, idPelangganElement, 'id_pelanggan');
-
-            dataFinderBox.appendChild(table);
-        } else {
-            table.innerHTML = '';
-
-            dataNotFoundMessage();
-            dataFinderBox.appendChild(p);
-        }
-    } catch (error) {
-        console.error(error);
-    } finally {
-        if (dataFinderBox.contains(loadingAnimation)) {
-            dataFinderBox.removeChild(loadingAnimation);
-        }
-    }
+// Table Finder
+function findTable(idTable = 0) {
+    renderFinder(
+        `http://127.0.0.1:8000/api/meja/get/${idTable}`,
+        'Cari Meja',
+        ['Kode Meja', 'Kapasitas Kursi', 'Aksi'],
+        ['id_meja', 'kapasitas_kursi'],
+        'table',
+        'id_meja'
+    );
 }
 
-function choosenMenu() {
+// Customer Finder
+function findCustomer(idCustomer = 0) {
+    renderFinder(
+        `http://127.0.0.1:8000/api/pelanggan/get/${idCustomer}`,
+        'Cari Pelanggan',
+        ['Kode Pelanggan', 'Nama Pelanggan', 'Jenis Kelamin', 'No HP', 'Alamat', 'Aksi'],
+        ['id_pelanggan', 'nama_pelanggan', 'jenis_kelamin', 'no_hp', 'alamat'],
+        'customer',
+        'id_pelanggan'
+    );
+}
+
+// View Chosen Menus
+function viewChosenMenus() {
     dataFinderBox.innerHTML = '';
 
-    const data = listOfChoosenMenu;
-
-    createTitle('Daftar menu yang dipilih');
-
-    if (data.length) {
-        p.innerHTML = '';
-
-        const idMenuElement = document.getElementById('id_menu');
-
-        const columns = ['Kode Menu', 'Nama Menu', 'Harga', 'Aksi'];
-        createTableHead(columns);
-
-        const keys = ['id_menu', 'nama_menu', 'harga'];
-
-        createTableBody(data, 'choosenMenu', keys, idMenuElement, 'id_menu');
-
+    if (listOfChosenMenus.length) {
+        renderTitle('Daftar Menu yang Dipilih');
+        renderTableHead(['Kode Menu', 'Nama Menu', 'Harga', 'Aksi']);
+        renderMenuTableBody(listOfChosenMenus, ['id_menu', 'nama_menu', 'harga']);
+        if (!dataFinderBox.contains(p)) {
         dataFinderBox.appendChild(table);
+        }
     } else {
-        table.innerHTML = '';
-
-        dataNotFoundMessage('Kamu belum memilih menu nih :(');
-        dataFinderBox.appendChild(p);
-
+        renderNotFoundMessage('Kamu belum memilih menu nih :(');
     }
 }

@@ -3,7 +3,7 @@
         <div class="flex flex-nowrap gap-4">
             <div class="h-fit rounded-md border bg-white p-4 shadow">
                 <h1 class="mb-4 text-3xl font-bold">Tambah Pesanan</h1>
-                <form x-init="choosenMenu()" action=""
+                <form x-init="viewChosenMenus()" action=""
                     method="POST">
                     @csrf
                     <div class="mb-4">
@@ -20,10 +20,10 @@
                         <label for="id_meja" class="min-w-28 mr-4 inline-block font-medium">Kode Meja</label>
                         <div class="flex items-center gap-2">
                             <input type="text" name="id_meja" id="id_meja" x-model="id_meja" :value="id_meja"
-                                @input="mejaFinder(id_meja || 0)"
+                                @input="findTable(id_meja || 0)"
                                 {{ $errors->has('id_meja') ? 'focused' : '' }} required
                                 class="{{ $errors->has('nama_pesanan') ? 'input-invalid' : 'input-valid' }} w-full rounded border bg-gray-100 px-4 py-2 shadow outline-none focus:ring">
-                            <button @click="mejaFinder()" type="button"
+                            <button @click="findTable()" type="button"
                                 class="rounded bg-gray-200 px-2 py-1 shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80">
                                 <span class="i-mdi-globe mt-1 text-2xl"></span>
                             </button>
@@ -36,10 +36,10 @@
                         <label for="id_pelanggan" class="min-w-28 mr-4 inline-block font-medium">Kode Pelanggan</label>
                         <div class="flex items-center gap-2">
                             <input type="text" name="id_pelanggan" id="id_pelanggan" x-model="id_pelanggan" :value="id_pelanggan"
-                                @input="pelangganFinder(id_pelanggan || 0)"
+                                @input="findCustomer(id_pelanggan || 0)"
                                 {{ $errors->has('id_pelanggan') ? 'focused' : '' }} required
                                 class="{{ $errors->has('nama_pesanan') ? 'input-invalid' : 'input-valid' }} w-full rounded border bg-gray-100 px-4 py-2 shadow outline-none focus:ring">
-                            <button @click="pelangganFinder()" type="button"
+                            <button @click="findCustomer()" type="button"
                                 class="rounded bg-gray-200 px-2 py-1 shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80">
                                 <span class="i-mdi-globe mt-1 text-2xl"></span>
                             </button>
@@ -49,12 +49,12 @@
                         @enderror
                     </div>
                     <div class="flex flex-col gap-4">
-                    <button @click="menuFinder()" type="button"
+                    <button @click="findMenu()" type="button"
                         class="rounded bg-blue-500 text-white px-4 py-2 w-full shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80 flex items-center justify-center gap-2 font-semibold">
                         <span class="i-mdi-food text-2xl"></span>
                         <span class="mt-1">Pilih Menu</span>
                     </button>
-                    <button @click="choosenMenu()" type="button"
+                    <button @click="viewChosenMenus()" type="button"
                         class="rounded bg-blue-500 text-white px-4 py-2 w-full shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80 flex items-center justify-center gap-2 font-semibold">
                         <span class="i-mdi-list-box text-2xl"></span>
                         <span class="mt-1">Menu yang anda pilih</span>
