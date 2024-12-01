@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -36,9 +37,9 @@ class Pesanan extends Model
         return "PS-{$nextNumber}";
     }
 
-    public function menu(): BelongsTo
+    public function menus(): BelongsToMany
     {
-        return $this->belongsTo(Menu::class, 'id_menu', 'id_menu');
+        return $this->belongsToMany(Menu::class, 'detail_pesanans', 'id_menu', 'id_pesanan');
     }
 
     public function meja(): BelongsTo

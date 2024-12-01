@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Pesanan;
 use Illuminate\Http\Request;
+use App\Models\DetailPesanan;
 
 class PesananController extends Controller
 {
@@ -11,7 +12,7 @@ class PesananController extends Controller
     {
         $pesanan = new Pesanan();
 
-        $pesanans = $pesanan->filter(request(['search']))->paginate(10);
+        $pesanans = $pesanan->filter(request(['search']))->with(['menus', 'pelanggan', 'user', 'meja'])->paginate(10);
 
         $idPesanan = $pesanan->generateIdPesanan();
 
@@ -42,27 +43,35 @@ class PesananController extends Controller
     {
         $request->validate([
             'id_pesanan' => 'required',
-            'id_menu' => 'required',
             'id_meja' => 'required',
             'id_pelanggan' => 'required',
-            'jumlah' => 'required',
             'id_user' => 'required',
+            'id_menu' => 'required',
+            'jumlah' => 'required',
         ]);
 
         $pesanan = new Pesanan();
 
         $pesanan->id_pesanan = $request->input('id_pesanan');
-        $pesanan->id_menu = $request->input('id_menu');
         $pesanan->id_meja = $request->input('id_meja');
         $pesanan->id_pelanggan = $request->input('id_pelanggan');
-        $pesanan->jumlah = $request->input('jumlah');
         $pesanan->id_user = $request->input('id_user');
 
-        if ($pesanan->save()) {
-            return redirect('/pesanan')->with('success', 'Pesanan baru berhasil ditambahkan!');
+        if(!$pesanan->save()) {
+            return redirect('/pesanan')->with('error', value: 'Pesanan baru gagal ditambahkan!');
         }
 
-        return redirect('/pesanan')->with('error', value: 'Pesanan baru gagal ditambahkan!');
+        foreach($request->input('id_menu') as $index => $id_menu) {
+            $detailPesanan = new DetailPesanan();
+
+            $detailPesanan->id_pesanan = $pesanan->id_pesanan;
+            $detailPesanan->id_menu = $id_menu;
+            $detailPesanan->jumlah = $request->input('jumlah')[$index];
+
+            $detailPesanan->save();
+        }
+        
+        return redirect('/pesanan')->with('success', 'Pesanan baru berhasil ditambahkan!');
     }
 
     public function choice($id_pesanan)

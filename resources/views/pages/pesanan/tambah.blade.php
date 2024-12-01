@@ -1,10 +1,9 @@
 <x-dashboard-layout :$title>
-    <div class="p-4">
-        <div class="flex flex-nowrap gap-4">
-            <div class="h-fit rounded-md border bg-white p-4 shadow">
-                <h1 class="mb-4 text-3xl font-bold">Tambah Pesanan</h1>
-                <form action=""
-                    method="POST">
+    <form action="" method="POST">
+        <div class="p-4">
+            <div class="flex flex-nowrap gap-4">
+                <div class="h-fit rounded-md border bg-white p-4 shadow">
+                    <h1 class="mb-4 text-3xl font-bold">Tambah Pesanan</h1>
                     @csrf
                     <div class="mb-4">
                         <label for="id_pesanan" class="min-w-28 mr-4 inline-block font-medium">Kode Pesanan</label>
@@ -35,8 +34,8 @@
                     <div x-data="{ id_pelanggan: '{{ $errors->has('id_pelanggan') ? '' : old('id_pelanggan') }}' }" class="mb-4">
                         <label for="id_pelanggan" class="min-w-28 mr-4 inline-block font-medium">Kode Pelanggan</label>
                         <div class="flex items-center gap-2">
-                            <input type="text" name="id_pelanggan" id="id_pelanggan" x-model="id_pelanggan" :value="id_pelanggan"
-                                @input="findCustomer(id_pelanggan || 0)"
+                            <input type="text" name="id_pelanggan" id="id_pelanggan" x-model="id_pelanggan"
+                                :value="id_pelanggan" @input="findCustomer(id_pelanggan || 0)"
                                 {{ $errors->has('id_pelanggan') ? 'focused' : '' }} required
                                 class="{{ $errors->has('nama_pesanan') ? 'input-invalid' : 'input-valid' }} w-full rounded border bg-gray-100 px-4 py-2 shadow outline-none focus:ring">
                             <button @click="findCustomer()" type="button"
@@ -49,28 +48,48 @@
                         @enderror
                     </div>
                     <div class="flex flex-col gap-4">
-                    <button @click="findMenu()" type="button"
-                        class="rounded bg-blue-500 text-white px-4 py-2 w-full shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80 flex items-center justify-center gap-2 font-semibold">
-                        <span class="i-mdi-food text-2xl"></span>
-                        <span class="mt-1">Pilih Menu</span>
-                    </button>
-                    <button @click="viewChosenMenus()" type="button"
-                        class="rounded bg-blue-500 text-white px-4 py-2 w-full shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80 flex items-center justify-center gap-2 font-semibold">
-                        <span class="i-mdi-list-box text-2xl"></span>
-                        <span class="mt-1">Menu yang anda pilih</span>
-                    </button>
-                    <input type="hidden" id="id_user" name="id_user" value="{{ Auth::user()->id }}">
-                    <button
-                        class="w-full rounded bg-blue-500 px-4 py-2 font-medium text-white shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80">Tambahkan pesanan</button>
-                        </div>
-                </form>
-            </div>
+                        <button @click="findMenu()" type="button"
+                            class="flex w-full items-center justify-center gap-2 rounded bg-blue-500 px-4 py-2 font-semibold text-white shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80">
+                            <span class="i-mdi-food text-2xl"></span>
+                            <span class="mt-1">Pilih Menu</span>
+                        </button>
+                        <button @click="viewChosenMenus()" type="button"
+                            class="flex w-full items-center justify-center gap-2 rounded bg-blue-500 px-4 py-2 font-semibold text-white shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80">
+                            <span class="i-mdi-list-box text-2xl"></span>
+                            <span class="mt-1">Menu yang anda pilih</span>
+                        </button>
+                        <input type="hidden" id="id_user" name="id_user" value="{{ Auth::user()->id }}">
+                        <button
+                            class="w-full rounded bg-blue-500 px-4 py-2 font-medium text-white shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80">Tambahkan
+                            pesanan</button>
+                    </div>
+                </div>
 
-            <div id="data-finder-box" class="relative w-full overflow-y-auto rounded border p-4 shadow"
-                style="height: calc(100vh - 120px)">
+                <div id="data-finder-box" class="relative w-full overflow-y-auto rounded border p-4 shadow"
+                    style="height: calc(100vh - 120px)">
+                </div>
             </div>
         </div>
+    </form>
+
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
     </div>
+@endif
+
+    <script>
+        @foreach ($errors->all() as $error)
+            document.addEventListener('DOMContentLoaded', () => {
+                const message = `{{ $error }}`;
+                window.errorAlert(message);
+            });
+        @endforeach
+    </script>
 
     <script src="/js/pesanan.js"></script>
 </x-dashboard-layout>

@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Menu extends Model
 {
@@ -35,9 +36,9 @@ class Menu extends Model
         return "MN-{$nextNumber}";
     }
 
-    public function pesanans(): HasMany
+    public function pesanans(): BelongsToMany
     {
-        return $this->hasMany(Pesanan::class);
+        return $this->belongsToMany(Pesanan::class, 'detail_pesanans',  'id_pesanan', 'id_menu');
     }
 
     public function scopeFilter(Builder $query, array $filters): void
