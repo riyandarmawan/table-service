@@ -37,15 +37,16 @@ const table = createElement('table');
 const thead = createElement('thead');
 const tbody = createElement('tbody');
 const listOfChosenMenus = [];
-
-// Map to track selected rows globally
-let selectedRows = {};
+const quantityMap = {}; // Track the jumlah for each menu item
 
 // Render Title
 function renderTitle(title) {
     h1.textContent = title;
     dataFinderBox.appendChild(h1);
 }
+
+// Map to track selected rows globally
+let selectedRows = {};
 
 // Render Table Head
 function renderTableHead(columns) {
@@ -58,17 +59,55 @@ function renderTableHead(columns) {
 }
 
 // Render Table Body for Menu
-function renderMenuTableBody(data, keys) {
+function renderMenuTableBody(data, keys, disabled = true) {
     tbody.innerHTML = '';
 
     data.forEach(row => {
         const tr = createElement('tr');
+
+        let input = createElement('input', {
+            value: row.id_menu,
+            classes: ['text-center', 'w-full', 'outline-none', '!bg-gray-100', 'w-full', 'h-full'],
+            readOnly: true,
+            type: 'text',
+            name: 'id_menu[]',
+            disabled: disabled,
+        });
+        let td = createElement('td', {
+            classes: ['p-0']
+        }, [input]);
+        tr.appendChild(td);
+
         keys.forEach(key => {
             const td = createElement('td', {
-                text: key === 'harga' ? window.formatToIdr(row[key]) : row[key]
+                text: key === 'harga' ? window.formatToIdr(row[key]) : row[key],
+                classes: ['bg-gray-100']
             });
             tr.appendChild(td);
         });
+
+        // Retrieve the stored quantity (if any) for this menu item
+        const storedJumlah = quantityMap[row.id_menu] || 1; // Default to 1 if not yet set
+        input = createElement('input', {
+            value: storedJumlah,
+            classes: ['text-center', 'w-full', 'outline-none', 'border', 'border-primary-500', 'h-full', 'w-full'],
+            type: 'text',
+            inputMode: 'numeric',
+            name: 'jumlah[]',
+            min: 1,
+            readOnly: true, // Make it readOnly initially
+            disabled: disabled,
+        });
+
+        // Update quantityMap when the user changes the quantity
+        input.addEventListener('input', () => {
+            quantityMap[row.id_menu] = parseInt(input.value, 10) || 1; // Ensure valid number input
+        });
+
+        td = createElement('td', {
+            classes: ['p-0'],
+        }, [input]);
+        tr.appendChild(td);
 
         const button = createElement('button', {
             text: 'Pilih',
@@ -83,6 +122,8 @@ function renderMenuTableBody(data, keys) {
         if (isSelected) {
             button.textContent = 'Hapus';
             button.classList.replace('button-primary', 'button-delete');
+            // If selected, make the input field editable
+            input.readOnly = false;
         }
 
         button.addEventListener('click', () => {
@@ -95,6 +136,8 @@ function renderMenuTableBody(data, keys) {
                     // After removing, update the button to 'Pilih' again
                     button.textContent = 'Pilih';
                     button.classList.replace('button-delete', 'button-primary');
+                    // Set the input field back to readonly when not selected
+                    input.readOnly = true;
                 }
             } else {
                 // Add the menu to the list of chosen menus
@@ -103,6 +146,8 @@ function renderMenuTableBody(data, keys) {
                 // Update the button text to 'Hapus' if added
                 button.textContent = 'Hapus';
                 button.classList.replace('button-primary', 'button-delete');
+                // Make the input field editable when selected
+                input.readOnly = false;
             }
 
             // Re-render the table body to reflect the state changes immediately
@@ -223,8 +268,8 @@ function findMenu(idMenu = 0) {
     renderFinder(
         `http://127.0.0.1:8000/api/menu/get/${idMenu}`,
         'Cari Menu',
-        ['Kode Menu', 'Nama Menu', 'Harga', 'Aksi'],
-        ['id_menu', 'nama_menu', 'harga'],
+        ['Kode Menu', 'Nama Menu', 'Harga', 'Pilih Jumlah', 'Aksi'],
+        ['nama_menu', 'harga'],
         'menu'
     );
 }
@@ -257,12 +302,12 @@ function findCustomer(idCustomer = 0) {
 function viewChosenMenus() {
     dataFinderBox.innerHTML = '';
 
+    renderTitle('Daftar Menu yang Dipilih');
     if (listOfChosenMenus.length) {
-        renderTitle('Daftar Menu yang Dipilih');
-        renderTableHead(['Kode Menu', 'Nama Menu', 'Harga', 'Aksi']);
-        renderMenuTableBody(listOfChosenMenus, ['id_menu', 'nama_menu', 'harga']);
+        renderTableHead(['Kode Menu', 'Nama Menu', 'Harga', 'Pilih Jumlah', 'Aksi']);
+        renderMenuTableBody(listOfChosenMenus, ['nama_menu', 'harga'], false);
         if (!dataFinderBox.contains(p)) {
-        dataFinderBox.appendChild(table);
+            dataFinderBox.appendChild(table);
         }
     } else {
         renderNotFoundMessage('Kamu belum memilih menu nih :(');

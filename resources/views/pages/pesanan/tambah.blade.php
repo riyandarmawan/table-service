@@ -3,7 +3,7 @@
         <div class="flex flex-nowrap gap-4">
             <div class="h-fit rounded-md border bg-white p-4 shadow">
                 <h1 class="mb-4 text-3xl font-bold">Tambah Pesanan</h1>
-                <form x-init="viewChosenMenus()" action=""
+                <form action=""
                     method="POST">
                     @csrf
                     <div class="mb-4">
@@ -20,7 +20,7 @@
                         <label for="id_meja" class="min-w-28 mr-4 inline-block font-medium">Kode Meja</label>
                         <div class="flex items-center gap-2">
                             <input type="text" name="id_meja" id="id_meja" x-model="id_meja" :value="id_meja"
-                                @input="findTable(id_meja || 0)"
+                                @input="findTable(id_meja || 0)" x-init="findTable()"
                                 {{ $errors->has('id_meja') ? 'focused' : '' }} required
                                 class="{{ $errors->has('nama_pesanan') ? 'input-invalid' : 'input-valid' }} w-full rounded border bg-gray-100 px-4 py-2 shadow outline-none focus:ring">
                             <button @click="findTable()" type="button"
