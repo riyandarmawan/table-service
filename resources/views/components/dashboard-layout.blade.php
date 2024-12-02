@@ -92,16 +92,19 @@
     </div>
 
     <script>
-        @if (Session::get('success'))
-            document.addEventListener('DOMContentLoaded', () => {
-                const message = `{{ Session::get('success') }}`;
-                window.successAlert(message);
+    document.addEventListener('DOMContentLoaded', () => {
+        @if ($errors->any())
+            const errors = @json($errors->all());
+            errors.forEach(error => {
+                window.errorAlert(error); // Display each error using your error notification system
             });
+        @elseif (Session::get('success'))
+            const message = `{{ Session::get('success') }}`;
+            window.successAlert(message);
         @elseif (Session::get('error'))
-            document.addEventListener('DOMContentLoaded', () => {
-                const message = `{{ Session::get('error') }}`;
-                window.errorAlert(message);
-            });
+            const message = `{{ Session::get('error') }}`;
+            window.errorAlert(message);
         @endif
-    </script>
+    });
+</script>
 </x-base-layout>

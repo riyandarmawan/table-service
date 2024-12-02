@@ -46,8 +46,14 @@ class PesananController extends Controller
             'id_meja' => 'required',
             'id_pelanggan' => 'required',
             'id_user' => 'required',
-            'id_menu' => 'required',
             'jumlah' => 'required',
+            'id_menu' => 'required',
+        ], [
+            // jumlah
+            'jumlah.required' => 'Menu wajib dipilih!',
+
+            // id_menu
+            'id_menu.required' => 'Menu wajib dipilih!',
         ]);
 
         $pesanan = new Pesanan();
@@ -95,39 +101,65 @@ class PesananController extends Controller
     {
         $request->validate([
             'id_pesanan' => 'required',
-            'id_menu' => 'required',
             'id_meja' => 'required',
             'id_pelanggan' => 'required',
-            'jumlah' => 'required',
             'id_user' => 'required',
+            'jumlah' => 'required',
+            'id_menu' => 'required',
         ]);
 
+        // Find the existing pesanan
         $pesanan = Pesanan::find($id_pesanan);
 
-        $pesanan->id_pesanan = $request->input('id_pesanan');
-        $pesanan->id_menu = $request->input('id_menu');
-        $pesanan->id_meja = $request->input('id_meja');
-        $pesanan->id_pelanggan = $request->input('id_pelanggan');
-        $pesanan->jumlah = $request->input('jumlah');
-        $pesanan->id_user = $request->input('id_user');
-
-        if ($pesanan->save()) {
-            return redirect('/pesanan')->with('success', 'Pesanan berhasil diubah!');
+        if (!$pesanan) {
+            return redirect('/pesanan')->with('error', 'Pesanan tidak ditemukan!');
         }
 
-        return redirect('/pesanan')->with('error', value: 'Pesanan gagal diubah!');
+        // Update the pesanan details
+        $pesanan->id_pesanan = $request->input('id_pesanan');
+        $pesanan->id_meja = $request->input('id_meja');
+        $pesanan->id_pelanggan = $request->input('id_pelanggan');
+        $pesanan->id_user = $request->input('id_user');
+
+        if (!$pesanan->save()) {
+            return redirect('/pesanan')->with('error', 'Pesanan gagal diubah!');
+        }
+
+        // Update or recreate the detail_pesanan rows
+        $idMenus = $request->input('id_menu');
+        $quantities = $request->input('jumlah');
+
+        // Delete existing detail_pesanan rows for this pesanan
+        DetailPesanan::where('id_pesanan', $id_pesanan)->delete();
+
+        // Insert the new detail_pesanan rows
+        foreach ($idMenus as $index => $id_menu) {
+            DetailPesanan::create([
+                'id_pesanan' => $pesanan->id_pesanan,
+                'id_menu' => $id_menu,
+                'jumlah' => $quantities[$index],
+            ]);
+        }
+
+        return redirect('/pesanan')->with('success', 'Pesanan berhasil diubah!');
     }
 
     public function destroy($id_pesanan)
     {
-        $pesanan = new Pesanan();
+        $pesanan = Pesanan::find($id_pesanan);
 
-        $pesanan = $pesanan->find($id_pesanan);
-
-        if ($pesanan->delete()) {
-            return redirect('/pesanan')->with('success', value: 'Pesanan berhasil dihapus!');
+        if (!$pesanan) {
+            return redirect('/pesanan')->with('error', 'Pesanan tidak ditemukan!');
         }
 
-        return redirect('/pesanan')->with('error', value: 'Pesanan gagal dihapus!');
+        // Delete related detail_pesanan rows
+        $pesanan->menus()->delete();
+
+        // Delete the pesanan itself
+        if ($pesanan->delete()) {
+            return redirect('/pesanan')->with('success', 'Pesanan berhasil dihapus!');
+        }
+
+        return redirect('/pesanan')->with('error', 'Pesanan gagal dihapus!');
     }
 }

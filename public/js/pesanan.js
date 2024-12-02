@@ -48,6 +48,10 @@ function renderTitle(title) {
 // Map to track selected rows globally
 let selectedRows = {};
 
+function setSelectedRows(key, value) {
+    selectedRows[key] = value;
+}
+
 // Render Table Head
 function renderTableHead(columns) {
     thead.innerHTML = '';
@@ -223,15 +227,14 @@ function renderNotFoundMessage(message = 'Data tidak ditemukan :(') {
 
 // Generic Finder
 async function renderFinder(url, title, columns, keys, type, primaryKey = '') {
-    // Render Title only if there's a title
-    if (!dataFinderBox.contains(h1)) {
-        renderTitle(title);
-    }
-
     try {
         // Clear previous content (table and loading animation)
         dataFinderBox.innerHTML = '';
         dataFinderBox.appendChild(loadingAnimation);
+
+        if (!dataFinderBox.contains(h1)) {
+            renderTitle(title);
+        }
 
         const data = await fetchData(url);
 
@@ -268,7 +271,7 @@ function findMenu(idMenu = 0) {
     renderFinder(
         `http://127.0.0.1:8000/api/menu/get/${idMenu}`,
         'Cari Menu',
-        ['Kode Menu', 'Nama Menu', 'Harga', 'Pilih Jumlah', 'Aksi'],
+        ['Kode Menu', 'Nama Menu', 'Harga', 'Masukkan Jumlah', 'Aksi'],
         ['nama_menu', 'harga'],
         'menu'
     );
@@ -299,18 +302,53 @@ function findCustomer(idCustomer = 0) {
 }
 
 // View Chosen Menus
-function viewChosenMenus() {
-    dataFinderBox.innerHTML = '';
+function viewChosenMenus(idMenu = '') {
+    dataFinderBox.innerHTML = ''; // Clear previous content
 
     renderTitle('Daftar Menu yang Dipilih');
 
-    if (listOfChosenMenus.length) {
-        renderTableHead(['Kode Menu', 'Nama Menu', 'Harga', 'Pilih Jumlah', 'Aksi']);
-        renderMenuTableBody(listOfChosenMenus, ['nama_menu', 'harga'], false);
+    let filteredMenus = listOfChosenMenus;
+
+    // Filter menus based on partial matching in relevant fields
+    if (idMenu.length) {
+        // Convert idMenu to lowercase for case-insensitive matching   
+        const searchKey = idMenu.toLowerCase();
+        filteredMenus = listOfChosenMenus.filter(menu =>
+            menu.id_menu.toLowerCase().includes(searchKey)
+        );
+    }
+
+    if (filteredMenus.length) {
+        // If filteredMenus is not empty, display the menus
+        renderTableHead(['Kode Menu', 'Nama Menu', 'Harga', 'Masukkan Jumlah', 'Aksi']);
+        renderMenuTableBody(filteredMenus, ['nama_menu', 'harga'], false);
         if (!dataFinderBox.contains(p)) {
             dataFinderBox.appendChild(table);
         }
+    } else if (idMenu) {
+        // If idMenu was provided but no menu matches
+        renderNotFoundMessage(`Menu yang mengandung "${idMenu}" tidak ditemukan.`);
     } else {
+        // If idMenu is empty and listOfChosenMenus is empty
         renderNotFoundMessage('Kamu belum memilih menu nih :(');
+    }
+}
+
+async function currentChosenMenus(idPesanan) {
+    try {
+        const data = await fetchData(`http://127.0.0.1:8000/api/detail-pesanan/choosen-menu/${idPesanan}`);
+
+        if (data.length) {
+            data.forEach(item => {
+                const { menu, jumlah } = item;
+
+                if (menu) {
+                    listOfChosenMenus.push(menu);
+                    quantityMap[menu.id_menu] = jumlah;
+                }
+            })
+        }
+    } catch (error) {
+        console.log(error);
     }
 }
