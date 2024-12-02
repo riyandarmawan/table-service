@@ -74,7 +74,7 @@ class PesananController extends Controller
         return redirect('/pesanan')->with('success', 'Pesanan baru berhasil ditambahkan!');
     }
 
-    public function choice($id_pesanan)
+    public function detail($id_pesanan)
     {
         $pesanan = new Pesanan();
 
@@ -88,7 +88,7 @@ class PesananController extends Controller
             'idPesanan' => $idPesanan
         ];
 
-        return view('pages.pesanan.pilih', $data);
+        return view('pages.pesanan.detail', $data);
     }
 
     public function update(Request $request, $id_pesanan)

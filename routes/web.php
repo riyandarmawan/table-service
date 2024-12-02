@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\PesananController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MejaController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\PesananController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PelangganController;
+use App\Http\Controllers\DetailPesananController;
 
 Route::get('/auth/login', [UserController::class, 'login'])->name('login');
 Route::post('/auth/login', [UserController::class, 'loginProcess']);
@@ -44,7 +45,10 @@ Route::middleware('auth')->group(callback: function() {
     Route::get('/pesanan', [PesananController::class, 'index']);
     Route::get('/pesanan/create', [PesananController::class, 'create']);
     Route::post('/pesanan/create', [PesananController::class, 'store']);
-    Route::get('/pesanan/choice/{id_pesanan}', [PesananController::class, 'choice']);
+    Route::get('/pesanan/detail/{id_pesanan}', [PesananController::class, 'detail']);
     Route::post('/pesanan/update/{id_pesanan}', [PesananController::class, 'update']);
     Route::post('/pesanan/delete/{id_pesanan}', [PesananController::class, 'destroy']);
+
+    // detail pesanan
+    Route::get('/api/detail-pesanan/choosen-menu/{id_pesanan}', [DetailPesananController::class, 'chosenMenu']);
 });

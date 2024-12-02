@@ -69,15 +69,15 @@ class Pesanan extends Model
             fn($query, $search) =>
             $query->where('id_pesanan', 'like', "%$search%")
 
-                ->orWhereHas('menu', fn(Builder $query, $search) =>
-                    $query->where('id_menu', 'like', "%$search%")
-                        ->orWhere('nama_menu', 'like', "%$search%"))
-
-                ->orWhereHas('meja', fn(Builder $query, $search) =>
+                ->orWhereHas('meja', fn(Builder $query) =>
                     $query->where('id_meja', 'like', "%$search%")
                         ->orWhere('kapasitas_kursi', 'like', "%$search%"))
 
-                ->orWhereHas('user', fn(Builder $query, $search) =>
+                ->orWhereHas('pelanggan', fn(Builder $query) =>
+                    $query->where('id_pelanggan', 'like', "%$search%")
+                        ->orWhere('nama_pelanggan', 'like', "%$search%"))
+
+                ->orWhereHas('user', fn(Builder $query) =>
                     $query->where('username', 'like', "%$search%")
                         ->orWhere('nama', 'like', "%$search%"))
         );

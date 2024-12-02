@@ -223,17 +223,17 @@ function renderNotFoundMessage(message = 'Data tidak ditemukan :(') {
 
 // Generic Finder
 async function renderFinder(url, title, columns, keys, type, primaryKey = '') {
+    // Render Title only if there's a title
+    if (!dataFinderBox.contains(h1)) {
+        renderTitle(title);
+    }
+
     try {
         // Clear previous content (table and loading animation)
         dataFinderBox.innerHTML = '';
         dataFinderBox.appendChild(loadingAnimation);
 
         const data = await fetchData(url);
-
-        // Render Title only if there's a title
-        if (!dataFinderBox.contains(h1)) {
-            renderTitle(title);
-        }
 
         // Render Table if there is data
         if (data.length) {
@@ -303,6 +303,7 @@ function viewChosenMenus() {
     dataFinderBox.innerHTML = '';
 
     renderTitle('Daftar Menu yang Dipilih');
+
     if (listOfChosenMenus.length) {
         renderTableHead(['Kode Menu', 'Nama Menu', 'Harga', 'Pilih Jumlah', 'Aksi']);
         renderMenuTableBody(listOfChosenMenus, ['nama_menu', 'harga'], false);
