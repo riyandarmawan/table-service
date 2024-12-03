@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('mejas', function (Blueprint $table) {
             $table->string('id_meja')->primary();
             $table->integer('kapasitas_kursi');
+            $table->enum('is_tersedia', ['Tersedia', 'Tidak tersedia'])->default('Tersedia');
             $table->timestamps();
             $table->softDeletes();
         });

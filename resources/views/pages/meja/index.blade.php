@@ -28,6 +28,18 @@
                             <p class="pl-4 pt-1 text-sm font-semibold text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
+                    <div class="mb-4">
+                        <label for="is_tersedia" class="min-w-28 mr-4 inline-block font-medium">Status</label>
+                        <select type="text" name="is_tersedia" id="is_tersedia"
+                            {{ $errors->has('is_tersedia') ? 'focused' : '' }} required
+                            class="{{ $errors->has('is_tersedia') ? 'input-invalid' : 'input-valid' }} w-full rounded border bg-gray-100 px-4 py-2 shadow outline-none focus:ring">
+                            <option {{ $errors->has('is_tersedia') ? 'selected' : (old('is_tersedia') === 'Tersedia' ? 'selected' : '') }} value="Tersedia">Tersedia</option>
+                            <option {{ $errors->has('is_tersedia') ? 'selected' : (old('is_tersedia') === 'Tidak tersedia' ? 'selected' : '') }}  value="Tidak tersedia">Tidak tersedia</option>
+                        </select>
+                        @error('is_tersedia')
+                            <p class="pl-4 pt-1 text-sm font-semibold text-red-500">{{ $message }}</p>
+                        @enderror
+                    </div>
                     @if (Request::is('meja'))
                         <button
                             class="w-full rounded bg-blue-500 px-4 py-2 font-medium text-white shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80">Tambah</button>
@@ -52,6 +64,7 @@
                     <thead>
                         <th>Kode Meja</th>
                         <th>Kapasitas Kursi</th>
+                        <th>Status</th>
                         <th>Aksi</th>
                     </thead>
                     <tbody>
@@ -59,6 +72,7 @@
                             <tr>
                                 <td>{{ $meja->id_meja }}</td>
                                 <td x-text="window.chairCapacity('{{ $meja->kapasitas_kursi }}')"></td>
+                                <td>{{ $meja->is_tersedia }}</td>
                                 <td>
                                     <a href="/meja/choice/{{ $meja->id_meja }}"
                                         class="inline-block rounded bg-blue-500 px-4 py-2 text-lg font-medium text-white shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80">Pilih</a>

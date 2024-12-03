@@ -27,12 +27,16 @@ class MejaController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'id_meja' => 'required',
+            'kapasitas_kursi' => 'required',
+            'is_tersedia' => 'required',
         ]);
 
         $meja = new Meja();
 
         $meja->id_meja = $request->input('id_meja');
         $meja->kapasitas_kursi = $request->input('kapasitas_kursi');
+        $meja->is_tersedia = $request->input('is_tersedia');
 
         if ($meja->save()) {
             return redirect('/meja')->with('success', 'Meja baru berhasil ditambahkan!');
@@ -65,12 +69,15 @@ class MejaController extends Controller
     {
         $request->validate([
             'id_meja' => 'required',
+            'kapasitas_kursi' => 'required',
+            'is_tersedia' => 'required',
         ]);
 
         $meja = Meja::find($id_meja);
 
         $meja->id_meja = $request->input('id_meja');
         $meja->kapasitas_kursi = $request->input('kapasitas_kursi');
+        $meja->is_tersedia = $request->input('is_tersedia');
 
         if ($meja->save()) {
             return redirect('/meja')->with('success', 'Meja berhasil diubah!');
@@ -96,7 +103,16 @@ class MejaController extends Controller
     {
         $meja = new Meja();
 
-        $mejas = $meja->where('id_meja', 'like', "%$id_meja%")->get() ?? $meja->all();
+        // Always start by filtering with 'is_tersedia' => true
+        $mejas = $meja->where('is_tersedia', 'Tersedia');
+
+        if (!empty($id_meja)) {
+            // Apply the 'id_meja' filter only if it is not empty
+            $mejas = $mejas->where('id_meja', 'like', "%$id_meja%");
+        }
+
+        // Retrieve the results after applying the filters
+        $mejas = $mejas->get();
 
         if (count($mejas)) {
             return response()->json($mejas, 200);

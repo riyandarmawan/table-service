@@ -282,8 +282,8 @@ function findTable(idTable = 0) {
     renderFinder(
         `http://127.0.0.1:8000/api/meja/get/${idTable}`,
         'Cari Meja',
-        ['Kode Meja', 'Kapasitas Kursi', 'Aksi'],
-        ['id_meja', 'kapasitas_kursi'],
+        ['Kode Meja', 'Kapasitas Kursi', 'Status', 'Aksi'],
+        ['id_meja', 'kapasitas_kursi', 'is_tersedia'],
         'table',
         'id_meja'
     );
