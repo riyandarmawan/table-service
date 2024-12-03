@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Meja;
 use App\Models\Pesanan;
 use Illuminate\Http\Request;
 use App\Models\DetailPesanan;
@@ -62,6 +63,10 @@ class PesananController extends Controller
         $pesanan->id_meja = $request->input('id_meja');
         $pesanan->id_pelanggan = $request->input('id_pelanggan');
         $pesanan->id_user = $request->input('id_user');
+
+        $meja = Meja::find($request->input('id_meja'));
+        $meja->is_tersedia = 'Tidak tersedia';
+        $meja->save();
 
         if(!$pesanan->save()) {
             return redirect('/pesanan')->with('error', value: 'Pesanan baru gagal ditambahkan!');
@@ -126,6 +131,10 @@ class PesananController extends Controller
         $pesanan->id_meja = $request->input('id_meja');
         $pesanan->id_pelanggan = $request->input('id_pelanggan');
         $pesanan->id_user = $request->input('id_user');
+
+        $meja = Meja::find($request->input('id_meja'));
+        $meja->is_tersedia = 'Tidak tersedia';
+        $meja->save();
 
         if (!$pesanan->save()) {
             return redirect('/pesanan')->with('error', 'Pesanan gagal diubah!');
