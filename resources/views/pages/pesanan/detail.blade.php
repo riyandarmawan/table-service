@@ -50,37 +50,31 @@
                                 <p class="pl-4 pt-1 text-sm font-semibold text-red-500">{{ $message }}</p>
                             @enderror
                         </div>
-                        <div x-data="{ searchMenu: '{{ $errors->has('searchMenu') ? $pesanan->pelanggan->searchMenu : old('searchMenu', $pesanan->pelanggan->searchMenu) }}' }" class="mb-4">
+                        <div x-data="{ searchMenu: '' }" class="mb-4">
                             <label for="searchMenu" class="min-w-28 mr-4 inline-block font-medium">Cari Menu</label>
                             <div class="flex items-center gap-2">
-                                <input type="text" id="searchMenu" x-model="searchMenu"
-                                    :value="searchMenu" @input="findMenu(searchMenu || 0)"
+                                <input type="text" id="searchMenu" x-model="searchMenu" :value="searchMenu"
+                                    @input="findMenu(searchMenu || 0)"
                                     class="{{ $errors->has('nama_pesanan') ? 'input-invalid' : 'input-valid' }} w-full rounded border bg-gray-100 px-4 py-2 shadow outline-none focus:ring">
                                 <button @click="findMenu()" type="button"
                                     class="rounded bg-gray-200 px-2 py-1 shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80">
                                     <span class="i-mdi-globe mt-1 text-2xl"></span>
                                 </button>
                             </div>
-                            @error('searchMenu')
-                                <p class="pl-4 pt-1 text-sm font-semibold text-red-500">{{ $message }}</p>
-                            @enderror
                         </div>
-                        <div x-data="{ searchChosenMenu: '{{ $errors->has('searchChosenMenu') ? $pesanan->pelanggan->searchChosenMenu : old('searchChosenMenu', $pesanan->pelanggan->searchChosenMenu) }}' }" class="mb-4">
-                            <label for="searchChosenMenu" class="min-w-28 mr-4 inline-block font-medium">Cari menu yang telah dipilih</label>
+                        <div x-data="{ searchChosenMenu: '' }" class="mb-4">
+                            <label for="searchChosenMenu" class="min-w-28 mr-4 inline-block font-medium">Cari menu yang
+                                telah dipilih</label>
                             <div class="flex items-center gap-2">
                                 <input type="text" id="searchChosenMenu" x-model="searchChosenMenu"
                                     :value="searchChosenMenu" @input="viewChosenMenus(searchChosenMenu || 0)"
-                                    x-init="currentChosenMenus('{{ $idPesanan }}')"
-                                    {{ $errors->has('searchChosenMenu') ? 'focused' : '' }}
+                                    x-init="currentChosenMenus('{{ $idPesanan }}')" {{ $errors->has('searchChosenMenu') ? 'focused' : '' }}
                                     class="{{ $errors->has('nama_pesanan') ? 'input-invalid' : 'input-valid' }} w-full rounded border bg-gray-100 px-4 py-2 shadow outline-none focus:ring">
                                 <button @click="viewChosenMenus()" type="button"
                                     class="rounded bg-gray-200 px-2 py-1 shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80">
                                     <span class="i-mdi-globe mt-1 text-2xl"></span>
                                 </button>
                             </div>
-                            @error('searchChosenMenu')
-                                <p class="pl-4 pt-1 text-sm font-semibold text-red-500">{{ $message }}</p>
-                            @enderror
                         </div>
                         <div class="flex flex-col gap-4">
                             <input type="hidden" id="id_user" name="id_user" value="{{ Auth::user()->id }}">
@@ -91,7 +85,8 @@
                                 class="w-full rounded bg-red-500 px-4 py-2 font-medium text-white shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80">Hapus
                                 pesanan</button>
                             <a href="/pesanan"
-                                class="w-full rounded bg-blue-500 px-4 py-2 font-medium text-white shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80">Kembali ke daftar pesanan</a>
+                                class="w-full rounded bg-blue-500 px-4 py-2 font-medium text-white shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80">Kembali
+                                ke daftar pesanan</a>
                         </div>
                     </div>
 
@@ -106,6 +101,17 @@
             href="/pesanan/delete/{{ $idPesanan ?? '' }}" confirmText="Ya, saya ingin menghapusnya"
             cancelText="Tidak"></x-modal>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            @if ($errors->any())
+                const errors = @json($errors->all());
+                errors.forEach(error => {
+                    window.errorAlert(error); // Display each error using your error notification system
+                });
+            @endif
+        });
+    </script>
 
     <script src="/js/pesanan.js"></script>
 </x-dashboard-layout>

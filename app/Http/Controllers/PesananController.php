@@ -106,6 +106,12 @@ class PesananController extends Controller
             'id_user' => 'required',
             'jumlah' => 'required',
             'id_menu' => 'required',
+        ], [
+            // jumlah
+            'jumlah.required' => 'Menu wajib dipilih!',
+
+            // id_menu
+            'id_menu.required' => 'Menu wajib dipilih!',
         ]);
 
         // Find the existing pesanan

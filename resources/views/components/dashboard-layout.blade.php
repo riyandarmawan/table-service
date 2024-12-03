@@ -93,12 +93,7 @@
 
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        @if ($errors->any())
-            const errors = @json($errors->all());
-            errors.forEach(error => {
-                window.errorAlert(error); // Display each error using your error notification system
-            });
-        @elseif (Session::get('success'))
+        @if (Session::get('success'))
             const message = `{{ Session::get('success') }}`;
             window.successAlert(message);
         @elseif (Session::get('error'))
