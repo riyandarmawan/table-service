@@ -15,12 +15,9 @@ class PesananController extends Controller
 
         $pesanans = $pesanan->filter(request(['search']))->with(['menus', 'pelanggan', 'user', 'meja'])->paginate(10);
 
-        $idPesanan = $pesanan->generateIdPesanan();
-
         $data = [
             'title' => 'Daftar Pesanan',
             'pesanans' => $pesanans,
-            'idPesanan' => $idPesanan
         ];
 
         return view('pages.pesanan.index', $data);
@@ -176,5 +173,24 @@ class PesananController extends Controller
         }
 
         return redirect('/pesanan')->with('error', 'Pesanan gagal dihapus!');
+    }
+
+    public function get($id_pesanan)
+    {
+        $pesanan = new Pesanan();
+
+        $pesanans = $pesanan->where('id_pesanan', 'like', "%$id_pesanan%");
+
+        if (!empty($id_pesanan)) {
+            $pesanans = $pesanan;
+        }
+
+        $pesanans = $pesanans->with(['meja', 'pelanggan', 'user', 'menus'])->get();
+
+        if (count($pesanans)) {
+            return response()->json($pesanans, 200);
+        }
+
+        return response()->json(['message' => 'Pesanan tidak ditemukan', 404]);
     }
 }

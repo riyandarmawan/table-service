@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PesananController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PelangganController;
+use App\Http\Controllers\TransaksiController;
 use App\Http\Controllers\DetailPesananController;
 
 Route::get('/auth/login', [UserController::class, 'login'])->name('login');
@@ -48,7 +49,16 @@ Route::middleware('auth')->group(callback: function() {
     Route::get('/pesanan/detail/{id_pesanan}', [PesananController::class, 'detail']);
     Route::post('/pesanan/update/{id_pesanan}', [PesananController::class, 'update']);
     Route::post('/pesanan/delete/{id_pesanan}', [PesananController::class, 'destroy']);
+    Route::get('/api/pesanan/get/{id_pesanan}', [PesananController::class, 'get']);
 
     // detail pesanan
     Route::get('/api/detail-pesanan/choosen-menu/{id_pesanan}', [DetailPesananController::class, 'chosenMenu']);
+
+    // pesanan
+    Route::get('/transaksi', [TransaksiController::class, 'index']);
+    Route::get('/transaksi/create', [TransaksiController::class, 'create']);
+    Route::post('/transaksi/create', [TransaksiController::class, 'store']);
+    Route::get('/transaksi/detail/{id_transaksi}', [TransaksiController::class, 'detail']);
+    Route::post('/transaksi/update/{id_transaksi}', [TransaksiController::class, 'update']);
+    Route::post('/transaksi/delete/{id_transaksi}', [TransaksiController::class, 'destroy']);
 });

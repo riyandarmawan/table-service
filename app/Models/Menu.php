@@ -38,7 +38,7 @@ class Menu extends Model
 
     public function pesanans(): BelongsToMany
     {
-        return $this->belongsToMany(Pesanan::class, 'detail_pesanans',  'id_pesanan', 'id_menu');
+        return $this->belongsToMany(Pesanan::class, 'detail_pesanans',  'id_menu', 'id_pesanan');
     }
 
     public function scopeFilter(Builder $query, array $filters): void

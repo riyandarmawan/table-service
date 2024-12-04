@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('id_menu');
             $table->integer('jumlah');
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign(columns: 'id_pesanan')->references('id_pesanan')->on('pesanans')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign(columns: 'id_menu')->references('id_menu')->on('menus')->onUpdate('cascade')->onDelete('cascade');

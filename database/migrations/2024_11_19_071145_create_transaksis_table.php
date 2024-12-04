@@ -16,7 +16,9 @@ return new class extends Migration
             $table->integer('id_pesanan');
             $table->integer('total');
             $table->integer('bayar');
+            $table->integer('kembalian');
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('id_pesanan')->references('id_pesanan')->on('pesanans')->onUpdate('cascade')->onDelete('cascade');
         });

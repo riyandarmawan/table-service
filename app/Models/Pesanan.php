@@ -39,7 +39,7 @@ class Pesanan extends Model
 
     public function menus(): BelongsToMany
     {
-        return $this->belongsToMany(Menu::class, 'detail_pesanans', 'id_menu', 'id_pesanan');
+        return $this->belongsToMany(Menu::class, 'detail_pesanans', 'id_pesanan', 'id_menu');
     }
 
     public function meja(): BelongsTo
@@ -57,9 +57,9 @@ class Pesanan extends Model
         return $this->belongsTo(User::class, 'id_user', 'id');
     }
 
-    public function transaksis(): HasMany
+    public function transaksi(): BelongsTo
     {
-        return $this->hasMany(Transaksi::class);
+        return $this->belongsTo(Transaksi::class);
     }
 
     public function scopeFilter(Builder $query, array $filters): void
