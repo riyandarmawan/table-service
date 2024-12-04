@@ -2,7 +2,7 @@
     <form action="" method="POST">
         <div class="p-4">
             <div class="flex flex-nowrap gap-4">
-                <div class="h-fit rounded-md border bg-white p-4 shadow">
+                <div class="overflow-y-scroll rounded-md border bg-white p-4 shadow" style="height: calc(100vh - 120px)">
                     <h1 class="mb-4 text-3xl font-bold">Tambah Transaksi</h1>
                     @csrf
                     <div class="mb-4">
@@ -19,7 +19,7 @@
                         <label for="id_pesanan" class="min-w-28 mr-4 inline-block font-medium">Kode Pesanan</label>
                         <div class="flex items-center gap-2">
                             <input type="text" name="id_pesanan" id="id_pesanan" x-model="id_pesanan" :value="id_pesanan"
-                                @input="findOrder(id_pesanan || 0)" x-init="findOrder()"
+                                @input="findOrder(id_pesanan || 0)" 
                                 {{ $errors->has('id_pesanan') ? 'focused' : '' }} required
                                 class="{{ $errors->has('nama_transaksi') ? 'input-invalid' : 'input-valid' }} w-full rounded border bg-gray-100 px-4 py-2 shadow outline-none focus:ring">
                             <button @click="findOrder()" type="button"
@@ -69,7 +69,7 @@
                             class="w-full rounded bg-blue-500 px-4 py-2 font-medium text-white shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80">Tambahkan
                             transaksi</button>
                         <a href="/transaksi"
-                            class="w-full rounded bg-blue-500 px-4 py-2 font-medium text-white shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80">Kembali
+                            class="w-full rounded bg-blue-500 px-4 py-2 font-medium text-white shadow hover:bg-opacity-90 focus:bg-opacity-70 active:bg-opacity-80 text-center">Kembali
                             ke daftar transaksi</a>
                     </div>
                 </div>

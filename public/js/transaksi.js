@@ -26,12 +26,24 @@ function createLoadingAnimation() {
 
 // Global Variables
 const dataFinderBox = document.getElementById('data-finder-box');
+const menusBox = createElement('div', {
+    classes: ['rounded', 'shadow', 'absolute', 'white', 'inset-4', 'p-4'],
+    id: 'menus-box',
+}, []);
 const loadingAnimation = createLoadingAnimation();
 const table = createElement('table');
 const thead = createElement('thead');
 const tbody = createElement('tbody');
 const h1 = createElement('h1', {
-    classes: ['font-bold', 'text-3xl', 'text-center', 'mb-4'],
+    classes: ['font-bold', 'text-3xl', 'text-center'],
+});
+const button = createElement('button', {
+    text: 'Kembali',
+    classes: ['button-delete'],
+    type: 'button'
+}, []);
+const headerContainer = createElement('div', {
+    classes: ['flex', 'items-center', 'justify-between', 'pb-4'],
 });
 const p = createElement('p', {
     classes: ['font-medium', 'text-red-500', 'text-center'],
@@ -40,9 +52,17 @@ const p = createElement('p', {
 // Map to track selected rows globally
 let selectedRows = {};
 
-function renderTitle(title) {
+function renderTitle(title, parent, type = '') {
     h1.textContent = title;
-    dataFinderBox.appendChild(h1);
+    if (type !== 'menus') {
+        h1.classList.add('mb-4');
+        parent.appendChild(h1);
+    } else {
+        h1.classList.remove('mb-4');
+        button.addEventListener('click', e => findOrder());
+        headerContainer.appendChild(h1);
+        headerContainer.appendChild(button);
+    }
 }
 
 function setSelectedRows(key, value) {
@@ -62,7 +82,7 @@ function getNestedProperty(obj, key) {
     return key.split('.').reduce((o, k) => (o && o[k] !== undefined ? o[k] : null), obj);
 }
 
-function renderTableBody(data, keys, primaryKey) {
+function renderTableBody(data, keys, primaryKey, type = '') {
     tbody.innerHTML = '';
 
     data.forEach(row => {
@@ -78,41 +98,43 @@ function renderTableBody(data, keys, primaryKey) {
             tr.appendChild(td);
         });
 
-        const button = createElement('button', {
-            text: 'Pilih',
-            classes: ['button-primary'],
-            type: 'button'
-        });
+        if (type !== 'menus') {
+            const button = createElement('button', {
+                text: 'Pilih',
+                classes: ['button-primary'],
+                type: 'button'
+            });
 
-        const primaryKeyInput = document.getElementById(primaryKey);
-        const currentPrimaryKeyValue = primaryKeyInput ? primaryKeyInput._x_model.get() : null;
+            const primaryKeyInput = document.getElementById(primaryKey);
+            const currentPrimaryKeyValue = primaryKeyInput ? primaryKeyInput._x_model.get() : null;
 
-        // Disable button if the primary key value matches the row's key
-        if (currentPrimaryKeyValue === row[primaryKey]) {
-            button.disabled = true;
-        }
-
-        button.addEventListener('click', () => {
-            // Re-enable previously selected button if any
-            if (selectedRows[primaryKey] && selectedRows[primaryKey] !== row[primaryKey]) {
-                const prevButton = tbody.querySelector(
-                    `button[data-id="${selectedRows[primaryKey]}"]`
-                );
-                if (prevButton) {
-                    prevButton.disabled = false;
-                }
+            // Disable button if the primary key value matches the row's key
+            if (currentPrimaryKeyValue === row[primaryKey]) {
+                button.disabled = true;
             }
 
-            // Update the state and disable the clicked button
-            selectedRows[primaryKey] = row[primaryKey];
-            primaryKeyInput._x_model.set(row[primaryKey]);
-            button.disabled = true;
-        });
+            button.addEventListener('click', () => {
+                // Re-enable previously selected button if any
+                if (selectedRows[primaryKey] && selectedRows[primaryKey] !== row[primaryKey]) {
+                    const prevButton = tbody.querySelector(
+                        `button[data-id="${selectedRows[primaryKey]}"]`
+                    );
+                    if (prevButton) {
+                        prevButton.disabled = false;
+                    }
+                }
 
-        // Assign a unique identifier to the button for tracking
-        button.setAttribute('data-id', row[primaryKey]);
+                // Update the state and disable the clicked button
+                selectedRows[primaryKey] = row[primaryKey];
+                primaryKeyInput._x_model.set(row[primaryKey]);
+                button.disabled = true;
+            });
 
-        tr.appendChild(createElement('td', {}, [button]));
+            // Assign a unique identifier to the button for tracking
+            button.setAttribute('data-id', row[primaryKey]);
+
+            tr.appendChild(createElement('td', {}, [button]));
+        }
         tbody.appendChild(tr);
     });
 
@@ -131,10 +153,18 @@ async function renderFinder(url, title, columns, keys, type, primaryKey = '') {
     try {
         // Clear previous content (table and loading animation)
         dataFinderBox.innerHTML = '';
-        dataFinderBox.appendChild(loadingAnimation);
-
-        if (!dataFinderBox.contains(h1)) {
-            renderTitle(title);
+        if (type === 'menus') {
+            dataFinderBox.appendChild(menusBox);
+            menusBox.appendChild(loadingAnimation);
+            if (!menusBox.contains(headerContainer)) {
+                renderTitle(title, menusBox, type);
+                menusBox.appendChild(headerContainer);
+            }
+        } else {
+            dataFinderBox.appendChild(loadingAnimation);
+            if (!dataFinderBox.contains(h1)) {
+                renderTitle(title, dataFinderBox);
+            }
         }
 
         const data = await fetchData(url);
@@ -146,11 +176,13 @@ async function renderFinder(url, title, columns, keys, type, primaryKey = '') {
             if (type === 'menu') {
                 renderMenuTableBody(data, keys);
             } else {
-                renderTableBody(data, keys, primaryKey);
+                renderTableBody(data, keys, primaryKey, type);
             }
 
-            if (!dataFinderBox.contains(p)) {
+            if (!dataFinderBox.contains(p) && type !== 'menus') {
                 dataFinderBox.appendChild(table);
+            } else if (!dataFinderBox.contains(p)) {
+                menusBox.appendChild(table);
             }
         } else {
             renderNotFoundMessage();
@@ -161,8 +193,10 @@ async function renderFinder(url, title, columns, keys, type, primaryKey = '') {
         renderNotFoundMessage('Terjadi kesalahan dalam memuat data.');
     } finally {
         // Remove loading animation once content is loaded or error occurs
-        if (dataFinderBox.contains(loadingAnimation)) {
+        if (dataFinderBox.contains(loadingAnimation) && type !== 'menus') {
             dataFinderBox.removeChild(loadingAnimation);
+        } else if (menusBox.contains(loadingAnimation)) {
+            menusBox.removeChild(loadingAnimation);
         }
     }
 }
@@ -175,5 +209,15 @@ function findOrder(idPesanan = 0) {
         ['id_pesanan', 'id_meja', 'meja.kapasitas_kursi', 'pelanggan.nama_pelanggan', 'user.username'],
         'order',
         'id_pesanan'
+    );
+}
+
+function showMenus(id_pesanan = '') {
+    renderFinder(
+        `http://127.0.0.1:8000/api/detail-pesanan/choosen-menu/${id_pesanan}`,
+        'Daftar menu pesanan',
+        ['Kode Menu', 'Nama Menu', 'Harga', 'Jumlah'],
+        ['id_menu', 'menu.nama_menu', 'menu.harga', 'jumlah'],
+        'menus',
     );
 }
