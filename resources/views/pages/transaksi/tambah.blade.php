@@ -19,7 +19,7 @@
                         <label for="id_pesanan" class="min-w-28 mr-4 inline-block font-medium">Kode Pesanan</label>
                         <div class="flex items-center gap-2">
                             <input type="text" name="id_pesanan" id="id_pesanan" x-model="id_pesanan" :value="id_pesanan"
-                                @input="findOrder(id_pesanan || 0)" x-init="findOrder()"
+                                @input="findOrder(id_pesanan || 0)" x-init="{{ old('id_pesanan') ? 'showMenus(id_pesanan) ': 'findOrder()' }}"
                                 {{ $errors->has('id_pesanan') ? 'focused' : '' }} required
                                 class="{{ $errors->has('nama_transaksi') ? 'input-invalid' : 'input-valid' }} w-full rounded border bg-gray-100 px-4 py-2 shadow outline-none focus:ring">
                             <button @click="findOrder()" type="button"
@@ -31,33 +31,30 @@
                             <p class="pl-4 pt-1 text-sm font-semibold text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
-                    <div x-data="{ total: window.formatToIdr({{ $menu->total ?? '' }}) || 'Rp. 0' }" class="mb-4">
+                    <div x-data="{ total: window.formatToIdr('{{ $errors->has('total') ? '' : old('total') }}') || 'Rp. 0' }" class="mb-4">
                         <label for="total" class="min-w-28 mr-4 inline-block font-medium">Total Harga</label>
                         <input type="text" name="total" id="total" x-model="total"
                             @input="total = window.formatToIdr(total)" :value="total"
-                            value="{{ $errors->has('total') ? $menu->total ?? '' : old('total', $menu->total ?? '') }}"
                             {{ $errors->has('total') ? 'focused' : '' }} readonly required
                             class="{{ $errors->has('total') ? 'input-invalid' : 'input-valid' }} w-full rounded border bg-gray-100 px-4 py-2 shadow outline-none focus:ring">
                         @error('total')
                             <p class="pl-4 pt-1 text-sm font-semibold text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
-                    <div x-data="{ bayar: window.formatToIdr({{ $menu->bayar ?? '' }}) || 'Rp. 0' }" class="mb-4">
+                    <div x-data="{ bayar: window.formatToIdr('{{ $errors->has('bayar') ? '' : old('bayar') }}') || 'Rp. 0' }" class="mb-4">
                         <label for="bayar" class="min-w-28 mr-4 inline-block font-medium">Bayar</label>
                         <input type="text" name="bayar" id="bayar" x-model="bayar"
                             @input="bayar = window.formatToIdr(bayar); updateKembalian(bayar)" :value="bayar"
-                            value="{{ $errors->has('bayar') ? $menu->bayar ?? '' : old('bayar', $menu->bayar ?? '') }}"
                             {{ $errors->has('bayar') ? 'focused' : '' }} required
                             class="{{ $errors->has('bayar') ? 'input-invalid' : 'input-valid' }} w-full rounded border bg-gray-100 px-4 py-2 shadow outline-none focus:ring">
                         @error('bayar')
                             <p class="pl-4 pt-1 text-sm font-semibold text-red-500">{{ $message }}</p>
                         @enderror
                     </div>
-                    <div x-data="{ kembalian: window.formatToIdr({{ $menu->kembalian ?? '' }}) || 'Rp. 0' }" class="mb-4">
+                    <div x-data="{ kembalian: window.formatToIdr('{{ $errors->has('kembalian') ? '' : old('kembalian') }}') || 'Rp. 0' }" class="mb-4">
                         <label for="kembalian" class="min-w-28 mr-4 inline-block font-medium">Kembalian</label>
                         <input type="text" name="kembalian" id="kembalian" x-model="kembalian"
                             @input="kembalian = window.formatToIdr(kembalian)" :value="kembalian"
-                            value="{{ $errors->has('kembalian') ? $menu->kembalian ?? '' : old('kembalian', $menu->kembalian ?? '') }}"
                             {{ $errors->has('kembalian') ? 'focused' : '' }} readonly required
                             class="{{ $errors->has('kembalian') ? 'input-invalid' : 'input-valid' }} w-full rounded border bg-gray-100 px-4 py-2 shadow outline-none focus:ring">
                         @error('kembalian')
@@ -80,15 +77,6 @@
             </div>
         </div>
     </form>
-
-    <script>
-        @if ($errors->any())
-            const errors = @json($errors->all());
-            errors.forEach(error => {
-                window.errorAlert(error); // Display each error using your error notification system
-            });
-        @endif
-    </script>
 
     <script src="/js/transaksi.js"></script>
 </x-dashboard-layout>

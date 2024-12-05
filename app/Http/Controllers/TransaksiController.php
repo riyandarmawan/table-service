@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pesanan;
 use App\Models\Transaksi;
 use Illuminate\Http\Request;
 
@@ -52,14 +53,23 @@ class TransaksiController extends Controller
         $transaksi = new Transaksi();
 
         $transaksi->id_transaksi = $request->input('id_transaksi');
-        $transaksi->total = (int) preg_replace('/[^\d]/', '', $request->input('total'));
-        $transaksi->bayar = (int) preg_replace('/[^\d]/', '', $request->input('bayar'));
+        $total = (int) preg_replace('/[^\d]/', '', $request->input('total'));
+        $bayar = (int) preg_replace('/[^\d]/', '', $request->input('bayar'));
+        if ($bayar < $total) {
+            return back()->withErrors(['bayar' => 'Uang anda kurang!'])->withInput($request->only(['id_pesanan', 'total', 'bayar', 'kembalian']));
+        }
+        $transaksi->total = $total;
+        $transaksi->bayar = $bayar;
         $transaksi->kembalian = (int) preg_replace('/[^\d]/', '', $request->input('kembalian'));
         $transaksi->id_pesanan = $request->input('id_pesanan');
 
         if (!$transaksi->save()) {
             return redirect('/transaksi')->with('error', value: 'Transaksi baru gagal ditambahkan!');
         }
+
+        $meja = Pesanan::find($request->input('id_pesanan'))->meja;
+        $meja->is_tersedia = 'Tersedia';
+        $meja->save();
 
         return redirect('/transaksi')->with('success', 'Transaksi baru berhasil ditambahkan!');
     }

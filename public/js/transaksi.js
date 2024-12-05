@@ -80,6 +80,10 @@ function renderTableBody(data, keys, primaryKey, type = '') {
                 value = window.chairCapacity(value);
             }
 
+            if (key === 'menu.harga') {
+                value = window.formatToIdr(value);
+            }
+
             const td = createElement('td', { text: value !== null ? value : '-' }); // Fallback to '-' if null
             tr.appendChild(td);
         });

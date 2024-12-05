@@ -15,6 +15,10 @@ class Transaksi extends Model
 
     protected $primaryKey = 'id_transaksi';
 
+    protected $keyType = 'string';
+
+    public $incrementing = false;
+
     protected $guarded = [];
 
     public static function generateIdTransaksi()
