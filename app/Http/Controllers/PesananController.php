@@ -175,22 +175,35 @@ class PesananController extends Controller
         return redirect('/pesanan')->with('error', 'Pesanan gagal dihapus!');
     }
 
-    public function get($id_pesanan)
+    public function get($searched_value = null, $related_id = null)
     {
-        $pesanan = new Pesanan();
+        // Base query for Pesanan with relationships
+        $pesananQuery = Pesanan::with(['meja', 'pelanggan', 'user', 'menus']);
 
-        $pesanans = $pesanan->where('id_pesanan', 'like', "%$id_pesanan%");
-
-        if (!empty($id_pesanan)) {
-            $pesanans = $pesanan;
+        // Filter by searched_value if provided
+        if (!empty($searched_value)) {
+            $pesananQuery->where('id_pesanan', 'like', "%$searched_value%");
         }
 
-        $pesanans = $pesanans->with(['meja', 'pelanggan', 'user', 'menus'])->get();
+        // Exclude Pesanan with transaksi, but include if related_id matches
+        $pesananQuery->where(function ($query) {
+            $query->whereDoesntHave('transaksi'); // Include all Pesanan without transaksi
+        });
 
-        if (count($pesanans)) {
+        if (!empty($related_id)) {
+            $pesananQuery->orWhereHas('transaksi', function ($query) use ($related_id) {
+                $query->where('id_pesanan', $related_id); // Include specific related_id
+            });
+        }
+
+        // Get results
+        $pesanans = $pesananQuery->get();
+
+        // Return response
+        if ($pesanans->isNotEmpty()) {
             return response()->json($pesanans, 200);
         }
 
-        return response()->json(['message' => 'Pesanan tidak ditemukan', 404]);
+        return response()->json(['message' => 'Pesanan tidak ditemukan'], 404);
     }
 }

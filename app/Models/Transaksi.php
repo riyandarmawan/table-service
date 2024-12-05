@@ -35,9 +35,9 @@ class Transaksi extends Model
         return "TR-{$nextNumber}";
     }
 
-    public function transaksi(): BelongsTo
+    public function pesanan(): BelongsTo
     {
-        return $this->belongsTo(Transaksi::class);
+        return $this->belongsTo(Pesanan::class, 'id_pesanan',  'id_pesanan');
     }
 
     public function scopeFilter(Builder $query, array $filters): void

@@ -49,10 +49,10 @@ Route::middleware('auth')->group(callback: function() {
     Route::get('/pesanan/detail/{id_pesanan}', [PesananController::class, 'detail']);
     Route::post('/pesanan/update/{id_pesanan}', [PesananController::class, 'update']);
     Route::post('/pesanan/delete/{id_pesanan}', [PesananController::class, 'destroy']);
-    Route::get('/api/pesanan/get/{id_pesanan}', [PesananController::class, 'get']);
+    Route::get('/api/pesanan/get/{searched_id}/{related_id}', [PesananController::class, 'get']);
 
     // detail pesanan
-    Route::get('/api/detail-pesanan/choosen-menu/{id_pesanan}', [DetailPesananController::class, 'chosenMenu']);
+    Route::get('/api/detail-pesanan/choosen-menu/{id_pesanan}/', [DetailPesananController::class, 'chosenMenu']);
 
     // pesanan
     Route::get('/transaksi', [TransaksiController::class, 'index']);

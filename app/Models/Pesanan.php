@@ -4,11 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Pesanan extends Model
 {
@@ -57,9 +58,9 @@ class Pesanan extends Model
         return $this->belongsTo(User::class, 'id_user', 'id');
     }
 
-    public function transaksi(): BelongsTo
+    public function transaksi(): HasOne
     {
-        return $this->belongsTo(Transaksi::class);
+        return $this->hasOne(Transaksi::class, 'id_pesanan', 'id_pesanan');
     }
 
     public function scopeFilter(Builder $query, array $filters): void
