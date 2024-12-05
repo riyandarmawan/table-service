@@ -103,6 +103,7 @@ class TransaksiController extends Controller
             // id_menu
             'id_pesanan.required' => 'Pesanan wajib dipilih!',
         ]);
+
         // Find the existing transaksi
         $transaksi = Transaksi::find($id_transaksi);
 
@@ -112,14 +113,23 @@ class TransaksiController extends Controller
 
         // Update the transaksi details
         $transaksi->id_transaksi = $request->input('id_transaksi');
-        $transaksi->total = $request->input('total');
-        $transaksi->bayar = $request->input('bayar');
-        $transaksi->kembalian = $request->input('kembalian');
+        $total = (int) preg_replace('/[^\d]/', '', $request->input('total'));
+        $bayar = (int) preg_replace('/[^\d]/', '', $request->input('bayar'));
+        if ($bayar < $total) {
+            return back()->withErrors(['bayar' => 'Uang anda kurang!'])->withInput($request->only(['id_pesanan', 'total', 'bayar', 'kembalian']));
+        }
+        $transaksi->total = $total;
+        $transaksi->bayar = $bayar;
+        $transaksi->kembalian = (int) preg_replace('/[^\d]/', '', $request->input('kembalian'));
         $transaksi->id_pesanan = $request->input('id_pesanan');
 
         if (!$transaksi->save()) {
             return redirect('/transaksi')->with('error', 'Transaksi gagal diubah!');
         }
+
+        $meja = Pesanan::find($request->input('id_pesanan'))->meja;
+        $meja->is_tersedia = 'Tersedia';
+        $meja->save();
 
         return redirect('/transaksi')->with('success', 'Transaksi berhasil diubah!');
     }

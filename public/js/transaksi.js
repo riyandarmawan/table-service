@@ -231,9 +231,9 @@ async function renderFinder(url, title, columns, keys, type, primaryKey = '') {
     }
 }
 
-function findOrder(idPesanan = 0) {
+function findOrder(idPesanan = 0, relatedId = 0) {
     renderFinder(
-        `http://127.0.0.1:8000/api/pesanan/get/${idPesanan}`,
+        `http://127.0.0.1:8000/api/pesanan/get/${idPesanan}/${relatedId}`,
         'Cari Pesanan',
         ['Kode Pesanan', 'Kode Meja', 'Kapasitas kursi', 'Nama pelanggan', 'User yang melayani', 'Aksi'],
         ['id_pesanan', 'id_meja', 'meja.kapasitas_kursi', 'pelanggan.nama_pelanggan', 'user.username'],
