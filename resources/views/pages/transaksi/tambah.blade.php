@@ -19,7 +19,7 @@
                         <label for="id_pesanan" class="min-w-28 mr-4 inline-block font-medium">Kode Pesanan</label>
                         <div class="flex items-center gap-2">
                             <input type="text" name="id_pesanan" id="id_pesanan" x-model="id_pesanan" :value="id_pesanan"
-                                @input="findOrder(id_pesanan || 0)" 
+                                @input="findOrder(id_pesanan || 0)" x-init="findOrder()"
                                 {{ $errors->has('id_pesanan') ? 'focused' : '' }} required
                                 class="{{ $errors->has('nama_transaksi') ? 'input-invalid' : 'input-valid' }} w-full rounded border bg-gray-100 px-4 py-2 shadow outline-none focus:ring">
                             <button @click="findOrder()" type="button"
@@ -45,7 +45,7 @@
                     <div x-data="{ bayar: window.formatToIdr({{ $menu->bayar ?? '' }}) || 'Rp. 0' }" class="mb-4">
                         <label for="bayar" class="min-w-28 mr-4 inline-block font-medium">Bayar</label>
                         <input type="text" name="bayar" id="bayar" x-model="bayar"
-                            @input="bayar = window.formatToIdr(bayar)" :value="bayar"
+                            @input="bayar = window.formatToIdr(bayar); updateKembalian(bayar)" :value="bayar"
                             value="{{ $errors->has('bayar') ? $menu->bayar ?? '' : old('bayar', $menu->bayar ?? '') }}"
                             {{ $errors->has('bayar') ? 'focused' : '' }} required
                             class="{{ $errors->has('bayar') ? 'input-invalid' : 'input-valid' }} w-full rounded border bg-gray-100 px-4 py-2 shadow outline-none focus:ring">

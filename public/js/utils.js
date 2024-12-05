@@ -18,3 +18,11 @@ window.chairCapacity = (value) => {
 
     return `${value} Orang`
 }
+
+// Function to format and convert to an integer
+window.formatToInteger = (value) => {
+    // Remove all non-digit characters
+    const digitsOnly = value.toString().replace(/\D/g, '');
+    // Convert the cleaned string back to an integer
+    return parseInt(digitsOnly, 10) || 0; // Default to 0 if invalid
+};

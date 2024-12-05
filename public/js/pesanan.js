@@ -290,7 +290,16 @@ function findTable(idTable = 0) {
 }
 
 // Customer Finder
-h
+function findCustomer(idCustomer = 0) {
+    renderFinder(
+        `http://127.0.0.1:8000/api/pelanggan/get/${idCustomer}`,
+        'Cari Meja',
+        ['Kode Pelanggan', 'Nama Pelanggan', 'Jenis Kelamin', 'Aksi'],
+        ['id_pelanggan', 'nama_pelanggan', 'jenis_kelamin'],
+        'customer',
+        'id_pelanggan'
+    );
+}
 
 // View Chosen Menus
 function viewChosenMenus(idMenu = '') {

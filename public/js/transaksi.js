@@ -26,43 +26,24 @@ function createLoadingAnimation() {
 
 // Global Variables
 const dataFinderBox = document.getElementById('data-finder-box');
-const menusBox = createElement('div', {
-    classes: ['rounded', 'shadow', 'absolute', 'white', 'inset-4', 'p-4'],
-    id: 'menus-box',
-}, []);
 const loadingAnimation = createLoadingAnimation();
 const table = createElement('table');
 const thead = createElement('thead');
 const tbody = createElement('tbody');
 const h1 = createElement('h1', {
-    classes: ['font-bold', 'text-3xl', 'text-center'],
-});
-const button = createElement('button', {
-    text: 'Kembali',
-    classes: ['button-delete'],
-    type: 'button'
-}, []);
-const headerContainer = createElement('div', {
-    classes: ['flex', 'items-center', 'justify-between', 'pb-4'],
+    classes: ['font-bold', 'text-3xl', 'text-center', 'mb-4'],
 });
 const p = createElement('p', {
     classes: ['font-medium', 'text-red-500', 'text-center'],
 });
+let menuDetails = {};
 
 // Map to track selected rows globally
 let selectedRows = {};
 
-function renderTitle(title, parent, type = '') {
+function renderTitle(title) {
     h1.textContent = title;
-    if (type !== 'menus') {
-        h1.classList.add('mb-4');
-        parent.appendChild(h1);
-    } else {
-        h1.classList.remove('mb-4');
-        button.addEventListener('click', e => findOrder());
-        headerContainer.appendChild(h1);
-        headerContainer.appendChild(button);
-    }
+    dataFinderBox.appendChild(h1);
 }
 
 function setSelectedRows(key, value) {
@@ -85,6 +66,11 @@ function getNestedProperty(obj, key) {
 function renderTableBody(data, keys, primaryKey, type = '') {
     tbody.innerHTML = '';
 
+    // Clear menuDetails when rendering menus
+    if (type === 'menus') {
+        menuDetails = {};
+    }
+
     data.forEach(row => {
         const tr = createElement('tr');
         keys.forEach(key => {
@@ -98,6 +84,14 @@ function renderTableBody(data, keys, primaryKey, type = '') {
             tr.appendChild(td);
         });
 
+        if (type === 'menus') {
+            // Save menu data globally for total calculation
+            menuDetails[row.id_menu] = {
+                harga: row.menu.harga,
+                jumlah: row.jumlah,
+            };
+        }
+
         if (type !== 'menus') {
             const button = createElement('button', {
                 text: 'Pilih',
@@ -110,7 +104,7 @@ function renderTableBody(data, keys, primaryKey, type = '') {
 
             // Disable button if the primary key value matches the row's key
             if (currentPrimaryKeyValue === row[primaryKey]) {
-                button.disabled = true;
+                button.disabled = false;
             }
 
             button.addEventListener('click', () => {
@@ -123,22 +117,53 @@ function renderTableBody(data, keys, primaryKey, type = '') {
                         prevButton.disabled = false;
                     }
                 }
+                showMenus(row.id_pesanan);
 
                 // Update the state and disable the clicked button
                 selectedRows[primaryKey] = row[primaryKey];
                 primaryKeyInput._x_model.set(row[primaryKey]);
-                button.disabled = true;
+                button.disabled = false;
             });
 
             // Assign a unique identifier to the button for tracking
             button.setAttribute('data-id', row[primaryKey]);
 
-            tr.appendChild(createElement('td', {}, [button]));
+            tr.appendChild(createElement('td', {
+                classes: ['flex', 'items-center', 'gap-4']
+            }, [button]));
         }
         tbody.appendChild(tr);
     });
 
     table.appendChild(tbody);
+
+    // Calculate totalHarga if rendering menus
+    if (type === 'menus') {
+        calculateTotalHarga();
+    }
+}
+
+function calculateTotalHarga() {
+    let totalHarga = 0;
+
+    Object.values(menuDetails).forEach(menu => {
+        totalHarga += menu.harga * menu.jumlah;
+    });
+
+    updateTotalDisplay(totalHarga); // Update total display in UI (optional)
+}
+
+function updateTotalDisplay(totalHarga) {
+    let totalDisplay = document.getElementById('total');
+
+    totalDisplay._x_model.set(window.formatToIdr(totalHarga));
+}
+
+function updateKembalian(bayar) {
+    const total = window.formatToInteger(document.getElementById('total')._x_model.get());
+    const kembalian = window.formatToInteger(bayar) - total;
+
+    document.getElementById('kembalian')._x_model.set(window.formatToIdr(kembalian > 0 ? kembalian : '0'));
 }
 
 // Render Not Found Message
@@ -153,18 +178,10 @@ async function renderFinder(url, title, columns, keys, type, primaryKey = '') {
     try {
         // Clear previous content (table and loading animation)
         dataFinderBox.innerHTML = '';
-        if (type === 'menus') {
-            dataFinderBox.appendChild(menusBox);
-            menusBox.appendChild(loadingAnimation);
-            if (!menusBox.contains(headerContainer)) {
-                renderTitle(title, menusBox, type);
-                menusBox.appendChild(headerContainer);
-            }
-        } else {
-            dataFinderBox.appendChild(loadingAnimation);
-            if (!dataFinderBox.contains(h1)) {
-                renderTitle(title, dataFinderBox);
-            }
+        dataFinderBox.appendChild(loadingAnimation);
+
+        if (!dataFinderBox.contains(h1)) {
+            renderTitle(title);
         }
 
         const data = await fetchData(url);
@@ -173,16 +190,27 @@ async function renderFinder(url, title, columns, keys, type, primaryKey = '') {
         if (data.length) {
             renderTableHead(columns);
 
-            if (type === 'menu') {
-                renderMenuTableBody(data, keys);
-            } else {
-                renderTableBody(data, keys, primaryKey, type);
+            renderTableBody(data, keys, primaryKey, type);
+
+            if (!dataFinderBox.contains(p)) {
+                dataFinderBox.appendChild(table);
             }
 
-            if (!dataFinderBox.contains(p) && type !== 'menus') {
-                dataFinderBox.appendChild(table);
-            } else if (!dataFinderBox.contains(p)) {
-                menusBox.appendChild(table);
+            if (type === 'menus') {
+                const button = createElement('button', {
+                    text: 'Kembali ke daftar pesanan',
+                    classes: ['button-delete']
+                }, []);
+
+                button.addEventListener('click', e => {
+                    findOrder();
+                });
+
+                const div = createElement('div', {
+                    classes: ['w-full', 'flex', 'justify-end', 'mt-4'],
+                }, [button]);
+
+                dataFinderBox.appendChild(div);
             }
         } else {
             renderNotFoundMessage();
@@ -193,10 +221,8 @@ async function renderFinder(url, title, columns, keys, type, primaryKey = '') {
         renderNotFoundMessage('Terjadi kesalahan dalam memuat data.');
     } finally {
         // Remove loading animation once content is loaded or error occurs
-        if (dataFinderBox.contains(loadingAnimation) && type !== 'menus') {
+        if (dataFinderBox.contains(loadingAnimation)) {
             dataFinderBox.removeChild(loadingAnimation);
-        } else if (menusBox.contains(loadingAnimation)) {
-            menusBox.removeChild(loadingAnimation);
         }
     }
 }
@@ -205,16 +231,16 @@ function findOrder(idPesanan = 0) {
     renderFinder(
         `http://127.0.0.1:8000/api/pesanan/get/${idPesanan}`,
         'Cari Pesanan',
-        ['Kode Pesanan', 'Kode Meja', 'Kapasitas kursi dari meja yang dipesan', 'Nama pelanggan', 'User yang melayani', 'Aksi'],
+        ['Kode Pesanan', 'Kode Meja', 'Kapasitas kursi', 'Nama pelanggan', 'User yang melayani', 'Aksi'],
         ['id_pesanan', 'id_meja', 'meja.kapasitas_kursi', 'pelanggan.nama_pelanggan', 'user.username'],
         'order',
         'id_pesanan'
     );
 }
 
-function showMenus(id_pesanan = '') {
+function showMenus(idPesanan = '') {
     renderFinder(
-        `http://127.0.0.1:8000/api/detail-pesanan/choosen-menu/${id_pesanan}`,
+        `http://127.0.0.1:8000/api/detail-pesanan/choosen-menu/${idPesanan}`,
         'Daftar menu pesanan',
         ['Kode Menu', 'Nama Menu', 'Harga', 'Jumlah'],
         ['id_menu', 'menu.nama_menu', 'menu.harga', 'jumlah'],
