@@ -38,7 +38,7 @@ class Meja extends Model
 
     public function pesanans(): HasMany
     {
-        return $this->hasMany(Pesanan::class);
+        return $this->hasMany(Pesanan::class, 'id_meja', 'id_meja');
     }
 
     public function scopeFilter(Builder $query, array $filters): void
