@@ -30,8 +30,22 @@ class UserController extends Controller
             'password.required' => 'Password harus diisi!',
         ]);
 
-        if(Auth::attempt($credentials)) {
-            return redirect()->intended('/')->with('success', 'Anda berhasil masuk');
+        if (Auth::attempt($credentials)) {
+            $user = Auth::user();
+
+            switch ($user->role) {
+                case 'administrator':
+                    return redirect()->intended('/meja')->with('success', 'Anda berhasil masuk sebagai Administrator');
+                case 'waiter':
+                    return redirect()->intended('/pesanan')->with('success', 'Anda berhasil masuk sebagai Waiter');
+                case 'kasir':
+                    return redirect()->intended('/transaksi')->with('success', 'Anda berhasil masuk sebagai Cashier');
+                case 'owner':
+                    return redirect()->intended('/')->with('success', 'Anda berhasil masuk sebagai Owner');
+                default:
+                    Auth::logout(); // Log out if role is unrecognized
+                    return redirect('/auth/login')->with('error', 'Role tidak dikenali. Hubungi Administrator.');
+            }
         }
 
         return back()->withErrors(['password' => 'Password yang anda masukkan salah!'])->onlyInput('username');

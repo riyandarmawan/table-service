@@ -38,11 +38,14 @@
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
         @if (Session::get('success'))
-            document.addEventListener('DOMContentLoaded', () => {
-                const message = `{{ Session::get('success') }}`;
-                window.successAlert(message);
-            });
+            const message = `{{ Session::get('success') }}`;
+            window.successAlert(message);
+        @elseif (Session::get('error'))
+            const message = `{{ Session::get('error') }}`;
+            window.errorAlert(message);
         @endif
+    });
     </script>
 </x-base-layout>
